@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magento 2 Front-End Developer Expert - Exam Prep</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Adobe Commerce Front-End Developer Expert by MattJ</h1>
+            <p class="text-gray-600">Exam Preparation - 5 Sections</p>
+        </header>
+
+        <!-- Sections Grid -->
+        <div class="grid md:grid-cols-2 gap-6 mb-8" x-data="{
+            sections: [
+                {
+                    title: 'Theme Management',
+                    url: 'theme-management.html',
+                    description: 'Theme structure, inheritance, and deployment'
+                },
+                {
+                    title: 'Layout XML & Templates',
+                    url: 'layout-xml-templates.html',
+                    description: 'Layout XML configuration, blocks, and template rendering'
+                },
+                {
+                    title: 'Styles',
+                    url: 'styles.html',
+                    description: 'CSS/LESS preprocessing, theme styles, and customization'
+                },
+                {
+                    title: 'JavaScript',
+                    url: 'javascript.html',
+                    description: 'RequireJS, Knockout.js, jQuery widgets, and UI components'
+                },
+                {
+                    title: 'Admin, Page Builder & Optimization',
+                    url: 'admin-pagebuilder-optimization.html',
+                    description: 'Admin UI customization, Page Builder, and performance optimization'
+                }
+            ]
+        }">
+            <template x-for="section in sections" :key="section.url">
+                <a :href="section.url" class="block bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-3" x-text="section.title"></h2>
+                    <p class="text-sm text-gray-600" x-text="section.description"></p>
+                </a>
+            </template>
+        </div>
+
+        <!-- Useful Links -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                </svg>
+                Useful Links
+            </h2>
+            
+            <div class="space-y-4" x-data="{
+                links: [
+                    {
+                        url: 'https://developer.adobe.com/commerce/php/development/',
+                        title: 'Adobe Commerce PHP Development',
+                        description: 'Official Adobe Commerce developer documentation - components, modules, themes, and best practices'
+                    },
+                    {
+                        url: 'https://developer.adobe.com/commerce/frontend-core/guide/',
+                        title: 'Adobe Commerce Frontend Guide',
+                        description: 'Complete frontend development guide covering themes, layouts, JavaScript, and UI components'
+                    },
+                    {
+                        url: 'https://learn.knockoutjs.com/#/?tutorial=intro',
+                        title: 'Knockout.js Interactive Tutorial',
+                        description: 'Learn Knockout.js MVVM pattern with interactive coding exercises - essential for Magento 2 frontend'
+                    },
+                    {
+                        url: 'https://devdocs.magento.com/',
+                        title: 'Magento DevDocs',
+                        description: 'Technical documentation for Magento/Adobe Commerce - guides, references, and API docs'
+                    },
+                    {
+                        url: 'https://certification.adobe.com/certification/front-end-developer-expert-v2/1250',
+                        title: '🎯 Adobe Commerce Front-End Developer Expert Exam',
+                        description: 'Official certification exam registration - Front-End Developer Expert (AD0-E720)'
+                    },
+                    {
+                        url: 'https://certification.adobe.com/courses/1251',
+                        title: '📝 Practice Exam (AD4-E727)',
+                        description: '⚠️ Practice test for Front-End Developer Expert - Note: Even 50% here doesn\'t guarantee passing the real exam as these questions are easier!'
+                    },
+                    {
+                        url: 'https://experienceleague.adobe.com/docs/commerce.html',
+                        title: 'Adobe Experience League',
+                        description: 'Adobe Commerce learning platform with courses, tutorials, and community resources'
+                    }
+                ]
+            }">
+                <template x-for="link in links" :key="link.url">
+                    <a :href="link.url" target="_blank" rel="noopener noreferrer" 
+                       class="block p-4 border-l-4 border-blue-500 bg-gray-50 hover:bg-blue-50 transition-colors rounded">
+                        <h3 class="font-semibold text-gray-800 mb-1 flex items-center" x-text="link.title">
+                        </h3>
+                        <p class="text-sm text-gray-600 mb-2" x-text="link.description"></p>
+                        <span class="text-xs text-blue-600 font-mono" x-text="link.url"></span>
+                    </a>
+                </template>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

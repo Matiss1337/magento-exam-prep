@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Styles - Exam Prep</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Navigation -->
+        <nav class="mb-6">
+            <a href="index.html" class="inline-flex items-center text-blue-600 hover:text-blue-800">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Back to Dashboard
+            </a>
+        </nav>
+
+        <!-- Header -->
+        <header class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Styles</h1>
+            <p class="text-gray-600">CSS/LESS preprocessing, theme styles, and customization</p>
+        </header>
+
+        <!-- Content Area -->
+        <div class="bg-white rounded-lg shadow-md p-6 space-y-6">
+            
+            <div class="border-l-4 border-blue-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">LESS Preprocessing</h3>
+                <p class="text-gray-700 text-sm mb-3">Magento uses LESS for CSS preprocessing with variables, mixins, and functions.</p>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>LESS file structure:</strong>
+                    <pre class="mt-2">&lt;theme_dir&gt;/web/css/
+├── source/
+│   ├── _extend.less    // extend parent variables
+│   ├── _theme.less     // custom styles
+│   └── _variables.less // override variables
+└── styles-m.less       // mobile
+    styles-l.less       // desktop</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Example _extend.less:</strong>
+                    <pre class="mt-2">@import 'source/_variables.less';
+
+.lib-css(reset, {
+    // custom reset styles
+});</pre>
+                </div>
+                
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                    <li>Compile: <code class="bg-gray-100 px-1">bin/magento setup:static-content:deploy</code></li>
+                    <li>Dev: <code class="bg-gray-100 px-1">bin/magento dev:source-theme:deploy</code></li>
+                </ul>
+            </div>
+
+            <div class="border-l-4 border-green-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Theme Styles Organization</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Import custom styles in theme:</strong>
+                    <pre class="mt-2">// web/css/source/_theme.less
+@import 'components/_header.less';
+@import 'components/_footer.less';
+
+.custom-element {
+    .lib-css(box-sizing);
+    color: @primary__color;
+}</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Override variables:</strong>
+                    <pre class="mt-2">// web/css/source/_variables.less
+@primary__color: #ff5501;
+@font-family__base: 'Open Sans', sans-serif;</pre>
+                </div>
+            </div>
+
+            <div class="border-l-4 border-cyan-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">🎯 Variable Overwrite in Theme - Exam Critical!</h3>
+                <p class="text-gray-700 text-sm mb-3">Magento uses LESS variables for theming. Understanding variable hierarchy is essential.</p>
+                
+                <div class="bg-yellow-50 border border-yellow-200 p-3 rounded text-xs mb-3">
+                    <strong class="text-yellow-800">Variable Fallback Order:</strong>
+                    <pre class="mt-2">1. Theme _variables.less (highest priority)
+2. Parent theme _variables.less
+3. Module lib/web/css/source/_variables.less
+4. Magento UI library variables (lowest priority)</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Location: &lt;theme_dir&gt;/web/css/source/_variables.less</strong>
+                    <pre class="mt-2">// Override Magento default variables
+@primary__color: #ff5501;
+@primary__color__light: lighten(@primary__color, 20%);
+@primary__color__dark: darken(@primary__color, 10%);
+
+// Typography
+@font-family__base: 'Roboto', sans-serif;
+@font-size__base: 14px;
+@line-height__base: 1.6;
+
+// Layout
+@layout__max-width: 1280px;
+@layout-indent__width: 20px;
+
+// Buttons
+@button__background: @primary__color;
+@button__border: @primary__color;
+@button__color: @color-white;
+
+// Breakpoints (read-only, don't override)
+// @screen__xs: 480px
+// @screen__s: 640px  
+// @screen__m: 768px (mobile/desktop switch)
+// @screen__l: 1024px
+// @screen__xl: 1440px</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Using variables in _extend.less or _theme.less:</strong>
+                    <pre class="mt-2">// web/css/source/_extend.less
+.my-custom-button {
+    background: @button__background;
+    color: @button__color;
+    padding: @button__padding;
+    
+    &:hover {
+        background: @button__hover__background;
+    }
+}</pre>
+                </div>
+                
+                <div class="bg-red-50 border border-red-200 p-3 rounded text-xs">
+                    <strong class="text-red-800">⚠️ Important Rules:</strong>
+                    <ul class="list-disc list-inside text-xs mt-2 space-y-1">
+                        <li>Create _variables.less BEFORE _extend.less in import order</li>
+                        <li>Variables must be defined before use</li>
+                        <li>Use @import to inherit parent theme variables first</li>
+                        <li>Don't modify vendor files - always override in theme</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-l-4 border-pink-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">🎯 Responsive Breakpoints - min vs max</h3>
+                <p class="text-gray-700 text-sm mb-3">Understanding min-width vs max-width is critical for the exam</p>
+                
+                <div class="bg-yellow-50 border border-yellow-200 p-3 rounded text-xs mb-3">
+                    <strong class="text-yellow-800">Key Breakpoint: @screen__m = 768px</strong>
+                    <p class="mt-2 text-xs">Magento uses 768px as the MAIN mobile/desktop switch point</p>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>min-width (Mobile-First) - Magento's preferred approach:</strong>
+                    <pre class="mt-2">// Apply styles when screen is ≥768px (desktop and up)
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+    .header {
+        padding: 20px;  // Desktop styles
+    }
+}
+
+Means: "Apply these styles starting from 768px and above"
+Use case: Desktop-specific styles</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>max-width (Desktop-First):</strong>
+                    <pre class="mt-2">// Apply styles when screen is &lt;768px (mobile)
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+    .header {
+        padding: 10px;  // Mobile styles
+    }
+}
+
+Means: "Apply these styles up to 768px (767px and below)"
+Use case: Mobile-specific overrides</pre>
+                </div>
+                
+                <div class="bg-blue-50 p-3 rounded text-xs mb-2">
+                    <strong>File Structure:</strong>
+                    <pre class="mt-2">styles-m.less  → Mobile base styles (always loaded)
+styles-l.less  → Desktop styles (≥768px via min-width)
+
+Layout XML:
+&lt;head&gt;
+    &lt;css src="css/styles-m.css"/&gt;
+    &lt;css src="css/styles-l.css" media="screen and (min-width: 768px)"/&gt;
+&lt;/head&gt;</pre>
+                </div>
+                
+                <div class="bg-red-50 border border-red-200 p-3 rounded text-xs">
+                    <strong class="text-red-800">🔥 Exam Critical:</strong>
+                    <ul class="list-disc list-inside text-xs mt-2 space-y-1">
+                        <li><code>min</code> = "from this size and UP" (≥)</li>
+                        <li><code>max</code> = "up to this size" (&lt;)</li>
+                        <li>Magento uses mobile-first (min-width in styles-l.less)</li>
+                        <li>@screen__m = 768px is the key breakpoint</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-l-4 border-purple-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">CSS Merging & Minification</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Admin Configuration:</strong>
+                    <pre class="mt-2">Stores → Configuration → Advanced → Developer → CSS Settings
+
+☑ Merge CSS Files
+☑ Minify CSS Files
+☐ Use CSS critical path (for optimization)</pre>
+                </div>
+                
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                    <li>Merging combines files → reduces HTTP requests</li>
+                    <li>Minification removes whitespace → reduces file size</li>
+                    <li>Production mode: enable both</li>
+                    <li>Developer mode: disable for debugging</li>
+                </ul>
+            </div>
+
+            <div class="border-l-4 border-orange-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Critical CSS & Performance</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Critical path configuration:</strong>
+                    <pre class="mt-2">// view.xml
+&lt;vars module="Magento_Theme"&gt;
+    &lt;var name="critical_css_inline"&gt;1&lt;/var&gt;
+&lt;/vars&gt;</pre>
+                </div>
+                
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-3">
+                    <li>Inlines critical CSS in <code class="bg-gray-100 px-1">&lt;head&gt;</code></li>
+                    <li>Loads remaining CSS asynchronously</li>
+                    <li>Improves initial page render time</li>
+                </ul>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs">
+                    <strong>CSS loading in layout:</strong>
+                    <pre class="mt-2">&lt;head&gt;
+    &lt;css src="css/styles-m.css" media="all"/&gt;
+    &lt;css src="css/styles-l.css" media="screen and (min-width: 768px)"/&gt;
+&lt;/head&gt;</pre>
+                </div>
+            </div>
+
+            <div class="border-l-4 border-red-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Magento UI Library</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <pre>// Use Magento LESS mixins
+.lib-button(@_button-padding: 10px);
+.lib-vendor-prefix-display(flex);
+.lib-css(responsive-images);</pre>
+                </div>
+                
+                <p class="text-sm text-gray-700">Available mixins: typography, layout, forms, buttons, icons, etc.</p>
+            </div>
+
+            <div class="border-l-4 border-indigo-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Adding Inline Styles & CSS from XML</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Add CSS/LESS files in layout:</strong>
+                    <pre class="mt-2">&lt;page&gt;
+    &lt;head&gt;
+        &lt;css src="css/custom.css"/&gt;
+        &lt;css src="Vendor_Module::css/module.css"/&gt;
+        &lt;css src="css/print.css" media="print"/&gt;
+    &lt;/head&gt;
+&lt;/page&gt;</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Conditional CSS (IE):</strong>
+                    <pre class="mt-2">&lt;head&gt;
+    &lt;css src="css/ie-fix.css" ie_condition="lt IE 9"/&gt;
+&lt;/head&gt;</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Pass CSS classes via XML arguments:</strong>
+                    <pre class="mt-2">&lt;block class="Magento\Framework\View\Element\Template" 
+       name="custom.block" 
+       template="Vendor_Module::custom.phtml"&gt;
+    &lt;arguments&gt;
+        &lt;argument name="css_class" xsi:type="string"&gt;custom-wrapper highlight&lt;/argument&gt;
+        &lt;argument name="html_id" xsi:type="string"&gt;unique-element&lt;/argument&gt;
+    &lt;/arguments&gt;
+&lt;/block&gt;</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Use in template:</strong>
+                    <pre class="mt-2">&lt;div class="&lt;?= $block-&gt;escapeHtmlAttr($block-&gt;getData('css_class')) ?&gt;"
+     id="&lt;?= $block-&gt;escapeHtmlAttr($block-&gt;getData('html_id')) ?&gt;"&gt;
+    &lt;!-- content --&gt;
+&lt;/div&gt;</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Container with HTML attributes:</strong>
+                    <pre class="mt-2">&lt;container name="custom.container" 
+           htmlTag="section" 
+           htmlClass="content-section bg-gray"
+           htmlId="main-content"/&gt;</pre>
+                </div>
+            </div>
+
+            <div class="border-l-4 border-pink-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Dynamic Styles from Backend</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Pass configuration to LESS variables:</strong>
+                    <pre class="mt-2">// Block class method
+public function getCustomColor() {
+    return $this-&gt;_scopeConfig-&gt;getValue('section/group/color');
+}</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Use in template (inline styles):</strong>
+                    <pre class="mt-2">&lt;style&gt;
+.custom-element {
+    background-color: &lt;?= $block-&gt;escapeCss($block-&gt;getCustomColor()) ?&gt;;
+}
+&lt;/style&gt;</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Or use data attributes + CSS:</strong>
+                    <pre class="mt-2">&lt;div class="custom-element" 
+     style="background-color: &lt;?= $block-&gt;escapeCss($block-&gt;getCustomColor()) ?&gt;;"&gt;
+&lt;/div&gt;</pre>
+                </div>
+                
+                <p class="text-sm text-gray-700 mt-2">⚠️ Always use <code class="bg-gray-100 px-1">escapeCss()</code> for inline styles to prevent XSS</p>
+            </div>
+
+            <div class="bg-blue-50 p-4 rounded mt-6">
+                <p class="text-sm text-gray-700">
+                    📚 <strong>Reference:</strong> 
+                    <a href="https://developer.adobe.com/commerce/php/development/" class="text-blue-600 hover:underline">Adobe Commerce PHP Development</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

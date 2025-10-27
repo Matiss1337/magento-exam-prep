@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout XML & Templates - Exam Prep</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Navigation -->
+        <nav class="mb-6">
+            <a href="index.html" class="inline-flex items-center text-blue-600 hover:text-blue-800">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Back to Dashboard
+            </a>
+        </nav>
+
+        <!-- Header -->
+        <header class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Layout XML & Templates</h1>
+            <p class="text-gray-600">Layout XML configuration, blocks, and template rendering</p>
+        </header>
+
+        <!-- Content Area -->
+        <div class="bg-white rounded-lg shadow-md p-6 space-y-6">
+            
+            <div class="border-l-4 border-blue-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Layout XML Structure</h3>
+                <p class="text-gray-700 text-sm mb-3">Layout files define page structure and content placement.</p>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Layout file locations:</strong>
+                    <pre class="mt-2">&lt;module_dir&gt;/view/frontend/layout/
+&lt;theme_dir&gt;/&lt;Vendor&gt;_&lt;Module&gt;/layout/
+
+Types:
+- default.xml (base layout)
+- &lt;handle&gt;.xml (e.g., catalog_product_view.xml)
+- page_layout/*.xml (page structures)</pre>
+                </div>
+            </div>
+
+            <div class="border-l-4 border-green-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Layout Instructions</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <pre>&lt;page&gt;
+    &lt;referenceContainer name="content"&gt;
+        &lt;block class="Vendor\Module\Block\CustomBlock" 
+               name="custom.block" 
+               template="Vendor_Module::custom.phtml"
+               before="-"/&gt;
+    &lt;/referenceContainer&gt;
+    
+    &lt;move element="custom.block" destination="sidebar.main"/&gt;
+    &lt;remove name="element.to.remove"/&gt;
+&lt;/page&gt;</pre>
+                </div>
+                
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                    <li><code class="bg-gray-100 px-1">referenceContainer/referenceBlock</code> - modify existing</li>
+                    <li><code class="bg-gray-100 px-1">block/container</code> - add new</li>
+                    <li><code class="bg-gray-100 px-1">move</code> - relocate elements</li>
+                    <li><code class="bg-gray-100 px-1">remove</code> - delete elements</li>
+                    <li><code class="bg-gray-100 px-1">arguments</code> - pass data to blocks</li>
+                </ul>
+            </div>
+
+            <div class="border-l-4 border-purple-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Blocks & Containers - Critical Differences!</h3>
+                
+                <div class="bg-yellow-50 border border-yellow-200 p-3 rounded text-xs mb-3">
+                    <strong class="text-yellow-800">🎯 Exam Critical - Understand the difference!</strong>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-3">
+                    <strong>Container:</strong> Structural element, holds other elements (blocks/containers)
+                    <pre class="mt-2">&lt;container name="content" htmlTag="div" htmlClass="content-wrapper"&gt;
+    &lt;!-- Can contain blocks and other containers --&gt;
+    &lt;block .../&gt;
+    &lt;container .../&gt;
+&lt;/container&gt;</pre>
+                    <ul class="list-disc list-inside text-xs mt-2 space-y-1">
+                        <li>NO PHP class</li>
+                        <li>NO template file</li>
+                        <li>Only renders HTML wrapper (htmlTag/htmlClass)</li>
+                        <li>Organizes page structure</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Block:</strong> Renders template via PHP class
+                    <pre class="mt-2">&lt;block class="Magento\Catalog\Block\Product\View" 
+       name="product.info" 
+       template="Magento_Catalog::product/view.phtml"&gt;
+    &lt;arguments&gt;
+        &lt;argument name="product_id" xsi:type="string"&gt;123&lt;/argument&gt;
+    &lt;/arguments&gt;
+    &lt;!-- Can contain other blocks (child blocks) --&gt;
+    &lt;block name="child.block" .../&gt;
+&lt;/block&gt;</pre>
+                    <ul class="list-disc list-inside text-xs mt-2 space-y-1">
+                        <li>HAS PHP class</li>
+                        <li>HAS template file (.phtml)</li>
+                        <li>Renders dynamic content</li>
+                        <li>Can contain child blocks</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-red-50 border border-red-200 p-3 rounded text-xs mt-3">
+                    <strong class="text-red-800">❌ NESTING RULES (Exam Question!):</strong>
+                    <pre class="mt-2 text-xs">✅ VALID:
+- Container → Block
+- Container → Container → Block
+- Block → Block (child blocks)
+
+❌ INVALID:
+- Block → Container (Blocks CANNOT contain containers!)
+- Block directly in &lt;body&gt; without container</pre>
+                    
+                    <p class="mt-2 text-xs"><strong>Why?</strong> Containers define page structure. Blocks are content renderers. 
+Blocks can have child blocks, but cannot hold structural containers.</p>
+                </div>
+            </div>
+
+            <div class="border-l-4 border-indigo-600 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">referenceContainer & referenceBlock</h3>
+                <p class="text-gray-700 text-sm mb-3">Modify existing elements without re-declaring them</p>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>referenceContainer - modify existing container:</strong>
+                    <pre class="mt-2">&lt;?xml version="1.0"?&gt;
+&lt;page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+    &lt;body&gt;
+        &lt;referenceContainer name="content"&gt;
+            &lt;!-- Add new block to existing container --&gt;
+            &lt;block class="Vendor\Module\Block\Custom" 
+                   name="my.custom.block"
+                   template="Vendor_Module::custom.phtml"/&gt;
+        &lt;/referenceContainer&gt;
+        
+        &lt;!-- Remove container --&gt;
+        &lt;referenceContainer name="sidebar.additional" remove="true"/&gt;
+    &lt;/body&gt;
+&lt;/page&gt;</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>referenceBlock - modify existing block:</strong>
+                    <pre class="mt-2">&lt;referenceBlock name="product.info.price"&gt;
+    &lt;!-- Add arguments to existing block --&gt;
+    &lt;arguments&gt;
+        &lt;argument name="show_tax" xsi:type="boolean"&gt;true&lt;/argument&gt;
+    &lt;/arguments&gt;
+&lt;/referenceBlock&gt;
+
+&lt;!-- Remove block --&gt;
+&lt;referenceBlock name="product.info.review" remove="true"/&gt;
+
+&lt;!-- Change block template --&gt;
+&lt;referenceBlock name="product.info" template="Vendor_Module::custom/product.phtml"/&gt;</pre>
+                </div>
+                
+                <div class="bg-blue-50 p-3 rounded text-xs">
+                    <strong>Key difference:</strong>
+                    <ul class="list-disc list-inside text-xs mt-2 space-y-1">
+                        <li><code>referenceContainer</code> - targets containers (structural)</li>
+                        <li><code>referenceBlock</code> - targets blocks (content)</li>
+                        <li>Both use <code>name</code> attribute to identify target</li>
+                        <li>Cannot change element type (container → block or vice versa)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-l-4 border-red-600 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Removing Elements</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Method 1: remove attribute (preferred):</strong>
+                    <pre class="mt-2">&lt;!-- Remove block --&gt;
+&lt;referenceBlock name="block.to.remove" remove="true"/&gt;
+
+&lt;!-- Remove container --&gt;
+&lt;referenceContainer name="sidebar.additional" remove="true"/&gt;</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Method 2: &lt;remove&gt; instruction (deprecated but works):</strong>
+                    <pre class="mt-2">&lt;body&gt;
+    &lt;remove name="block.to.remove"/&gt;
+&lt;/body&gt;</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Remove all child blocks:</strong>
+                    <pre class="mt-2">&lt;referenceContainer name="content"&gt;
+    &lt;!-- This removes the container and ALL its children --&gt;
+&lt;/referenceContainer&gt;
+&lt;referenceContainer name="content" remove="true"/&gt;</pre>
+                </div>
+                
+                <div class="bg-yellow-50 p-2 rounded text-xs mt-2">
+                    ⚠️ <strong>Important:</strong> Removing a parent removes ALL child elements too
+                </div>
+            </div>
+
+            <div class="border-l-4 border-green-600 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Moving Elements</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Basic move syntax:</strong>
+                    <pre class="mt-2">&lt;move element="block.or.container.name" 
+      destination="target.container.name" 
+      before="sibling.element.name"/&gt;
+      
+&lt;move element="block.or.container.name" 
+      destination="target.container.name" 
+      after="sibling.element.name"/&gt;</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Example - Move breadcrumbs:</strong>
+                    <pre class="mt-2">&lt;page&gt;
+    &lt;body&gt;
+        &lt;!-- Move breadcrumbs from page.top to content --&gt;
+        &lt;move element="breadcrumbs" 
+              destination="content" 
+              before="-"/&gt;
+    &lt;/body&gt;
+&lt;/page&gt;</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Positioning with before/after:</strong>
+                    <pre class="mt-2">&lt;!-- Move to first position --&gt;
+&lt;move element="my.block" destination="content" before="-"/&gt;
+
+&lt;!-- Move to last position --&gt;
+&lt;move element="my.block" destination="content" after="-"/&gt;
+
+&lt;!-- Move before specific element --&gt;
+&lt;move element="my.block" destination="content" before="product.info"/&gt;
+
+&lt;!-- Move after specific element --&gt;
+&lt;move element="my.block" destination="content" after="product.info"/&gt;</pre>
+                </div>
+                
+                <div class="bg-red-50 p-3 rounded text-xs mt-2">
+                    <strong>⚠️ Move Rules:</strong>
+                    <ul class="list-disc list-inside text-xs mt-2 space-y-1">
+                        <li><code>element</code> - name of block/container to move</li>
+                        <li><code>destination</code> - must be a CONTAINER (not a block!)</li>
+                        <li>Cannot move to invalid destination (e.g., block → container inside block)</li>
+                        <li><code>before="-"</code> means first position</li>
+                        <li><code>after="-"</code> means last position</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-l-4 border-pink-600 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Passing Arguments in Detail</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>All argument types:</strong>
+                    <pre class="mt-2">&lt;block class="Vendor\Module\Block\Custom" name="custom.block"&gt;
+    &lt;arguments&gt;
+        &lt;!-- String --&gt;
+        &lt;argument name="title" xsi:type="string"&gt;My Title&lt;/argument&gt;
+        
+        &lt;!-- Number --&gt;
+        &lt;argument name="limit" xsi:type="number"&gt;10&lt;/argument&gt;
+        
+        &lt;!-- Boolean --&gt;
+        &lt;argument name="is_active" xsi:type="boolean"&gt;true&lt;/argument&gt;
+        
+        &lt;!-- Array --&gt;
+        &lt;argument name="config" xsi:type="array"&gt;
+            &lt;item name="key1" xsi:type="string"&gt;value1&lt;/item&gt;
+            &lt;item name="key2" xsi:type="number"&gt;100&lt;/item&gt;
+            &lt;item name="nested" xsi:type="array"&gt;
+                &lt;item name="nested_key" xsi:type="string"&gt;nested_value&lt;/item&gt;
+            &lt;/item&gt;
+        &lt;/argument&gt;
+        
+        &lt;!-- Object (class instance) --&gt;
+        &lt;argument name="viewModel" xsi:type="object"&gt;Vendor\Module\ViewModel\Custom&lt;/argument&gt;
+        
+        &lt;!-- Helper method call --&gt;
+        &lt;argument name="store_name" xsi:type="helper" 
+                  helper="Magento\Store\Helper\Data::getStoreName"/&gt;
+        
+        &lt;!-- Null --&gt;
+        &lt;argument name="optional_param" xsi:type="null"/&gt;
+    &lt;/arguments&gt;
+&lt;/block&gt;</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Merging arguments with referenceBlock:</strong>
+                    <pre class="mt-2">&lt;!-- Original block in module --&gt;
+&lt;block name="product.info"&gt;
+    &lt;arguments&gt;
+        &lt;argument name="title" xsi:type="string"&gt;Product&lt;/argument&gt;
+        &lt;argument name="limit" xsi:type="number"&gt;5&lt;/argument&gt;
+    &lt;/arguments&gt;
+&lt;/block&gt;
+
+&lt;!-- In theme, merge new arguments --&gt;
+&lt;referenceBlock name="product.info"&gt;
+    &lt;arguments&gt;
+        &lt;!-- Override existing --&gt;
+        &lt;argument name="limit" xsi:type="number"&gt;10&lt;/argument&gt;
+        &lt;!-- Add new --&gt;
+        &lt;argument name="show_tax" xsi:type="boolean"&gt;true&lt;/argument&gt;
+    &lt;/arguments&gt;
+&lt;/referenceBlock&gt;
+
+Result: title=Product, limit=10 (overridden), show_tax=true (added)</pre>
+                </div>
+            </div>
+
+            <div class="border-l-4 border-cyan-600 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Block Positioning (before/after)</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Position blocks when adding:</strong>
+                    <pre class="mt-2">&lt;referenceContainer name="content"&gt;
+    &lt;!-- Add as first element --&gt;
+    &lt;block name="first.block" before="-" .../&gt;
+    
+    &lt;!-- Add as last element --&gt;
+    &lt;block name="last.block" after="-" .../&gt;
+    
+    &lt;!-- Add before specific element --&gt;
+    &lt;block name="custom.block" before="product.info" .../&gt;
+    
+    &lt;!-- Add after specific element --&gt;
+    &lt;block name="custom.block" after="product.info" .../&gt;
+&lt;/referenceContainer&gt;</pre>
+                </div>
+                
+                <div class="bg-blue-50 p-3 rounded text-xs">
+                    <strong>Rendering order:</strong>
+                    <pre class="mt-2">Container renders children in order:
+1. Elements with before="-" (in declaration order)
+2. Elements without positioning
+3. Elements with after="-" (in declaration order)
+
+Special values:
+- = first position
++ = last position (after="-")</pre>
+                </div>
+            </div>
+
+            <div class="border-l-4 border-teal-600 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Complete Layout XML Example</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Real-world example combining all concepts:</strong>
+                    <pre class="mt-2">&lt;?xml version="1.0"?&gt;
+&lt;page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+    &lt;body&gt;
+        &lt;!-- 1. Remove unwanted elements --&gt;
+        &lt;referenceBlock name="catalog.compare.sidebar" remove="true"/&gt;
+        
+        &lt;!-- 2. Modify existing container --&gt;
+        &lt;referenceContainer name="content"&gt;
+            &lt;!-- Add new block with arguments --&gt;
+            &lt;block class="Vendor\Module\Block\Banner" 
+                   name="custom.banner"
+                   template="Vendor_Module::banner.phtml"
+                   before="-"&gt;
+                &lt;arguments&gt;
+                    &lt;argument name="title" xsi:type="string"&gt;Special Offer&lt;/argument&gt;
+                    &lt;argument name="config" xsi:type="array"&gt;
+                        &lt;item name="show_timer" xsi:type="boolean"&gt;true&lt;/item&gt;
+                    &lt;/argument&gt;
+                &lt;/arguments&gt;
+            &lt;/block&gt;
+        &lt;/referenceContainer&gt;
+        
+        &lt;!-- 3. Modify existing block --&gt;
+        &lt;referenceBlock name="product.info.price"&gt;
+            &lt;arguments&gt;
+                &lt;argument name="display_tax" xsi:type="boolean"&gt;true&lt;/argument&gt;
+            &lt;/arguments&gt;
+        &lt;/referenceBlock&gt;
+        
+        &lt;!-- 4. Move element --&gt;
+        &lt;move element="product.info.review" 
+              destination="content.aside"
+              after="product.info"/&gt;
+              
+        &lt;!-- 5. Create new container --&gt;
+        &lt;referenceContainer name="sidebar.main"&gt;
+            &lt;container name="custom.widget.container" 
+                       htmlTag="div" 
+                       htmlClass="widget-wrapper"&gt;
+                &lt;block class="Vendor\Module\Block\Widget" 
+                       name="custom.widget"
+                       template="Vendor_Module::widget.phtml"/&gt;
+            &lt;/container&gt;
+        &lt;/referenceContainer&gt;
+    &lt;/body&gt;
+&lt;/page&gt;</pre>
+                </div>
+            </div>
+
+            <div class="border-l-4 border-orange-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Template Files (.phtml)</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Location:</strong>
+                    <pre class="mt-2">&lt;module_dir&gt;/view/frontend/templates/
+&lt;theme_dir&gt;/&lt;Vendor&gt;_&lt;Module&gt;/templates/</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Example template:</strong>
+                    <pre class="mt-2">&lt;?php /** @var $block \Magento\Catalog\Block\Product\View */ ?&gt;
+&lt;div class="product-info"&gt;
+    &lt;h1&gt;&lt;?= $block-&gt;escapeHtml($block-&gt;getProduct()-&gt;getName()) ?&gt;&lt;/h1&gt;
+    &lt;?= $block-&gt;getChildHtml('product.price') ?&gt;
+&lt;/div&gt;</pre>
+                </div>
+                
+                <p class="text-sm text-gray-700">Always escape output: <code class="bg-gray-100 px-1">escapeHtml()</code>, <code class="bg-gray-100 px-1">escapeUrl()</code></p>
+            </div>
+
+            <div class="border-l-4 border-red-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Override & Extend</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Override template in theme:</strong>
+                    <pre class="mt-2">app/design/frontend/&lt;Vendor&gt;/&lt;theme&gt;/Magento_Catalog/templates/product/view.phtml</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Extend layout in theme:</strong>
+                    <pre class="mt-2">app/design/frontend/&lt;Vendor&gt;/&lt;theme&gt;/Magento_Catalog/layout/catalog_product_view.xml</pre>
+                </div>
+                
+                <p class="text-sm text-gray-600 mt-2">Theme layouts merge with module layouts (don't replace)</p>
+            </div>
+
+            <div class="border-l-4 border-indigo-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Passing Variables from XML to Templates</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Pass data via arguments:</strong>
+                    <pre class="mt-2">&lt;block class="Vendor\Module\Block\Custom" name="custom.block" template="Vendor_Module::custom.phtml"&gt;
+    &lt;arguments&gt;
+        &lt;argument name="title" xsi:type="string"&gt;My Title&lt;/argument&gt;
+        &lt;argument name="product_id" xsi:type="number"&gt;123&lt;/argument&gt;
+        &lt;argument name="is_active" xsi:type="boolean"&gt;true&lt;/argument&gt;
+        &lt;argument name="config" xsi:type="array"&gt;
+            &lt;item name="limit" xsi:type="number"&gt;10&lt;/item&gt;
+            &lt;item name="sort" xsi:type="string"&gt;name&lt;/item&gt;
+        &lt;/argument&gt;
+    &lt;/arguments&gt;
+&lt;/block&gt;</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Access in template (.phtml):</strong>
+                    <pre class="mt-2">&lt;?php
+// Direct method (if defined in block class)
+$title = $block-&gt;getTitle();
+
+// Via getData()
+$title = $block-&gt;getData('title');
+$productId = $block-&gt;getData('product_id');
+$config = $block-&gt;getData('config');
+$limit = $config['limit'] ?? 10;
+?&gt;
+
+&lt;h2&gt;&lt;?= $block-&gt;escapeHtml($title) ?&gt;&lt;/h2&gt;
+&lt;div data-product-id="&lt;?= (int)$productId ?&gt;"&gt;...&lt;/div&gt;</pre>
+                </div>
+                
+                <p class="text-sm text-gray-700 mt-2">Argument types: <code class="bg-gray-100 px-1">string</code>, <code class="bg-gray-100 px-1">number</code>, <code class="bg-gray-100 px-1">boolean</code>, <code class="bg-gray-100 px-1">array</code>, <code class="bg-gray-100 px-1">object</code>, <code class="bg-gray-100 px-1">helper</code></p>
+            </div>
+
+            <div class="border-l-4 border-pink-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">XSS Prevention & Output Escaping</h3>
+                <p class="text-gray-700 text-sm mb-3">⚠️ <strong>Critical:</strong> Always escape output to prevent XSS attacks</p>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Escape methods:</strong>
+                    <pre class="mt-2">// HTML content (default)
+&lt;?= $block-&gt;escapeHtml($text) ?&gt;
+
+// HTML attributes
+&lt;div class="&lt;?= $block-&gt;escapeHtmlAttr($className) ?&gt;"&gt;
+
+// URLs
+&lt;a href="&lt;?= $block-&gt;escapeUrl($url) ?&gt;"&gt;Link&lt;/a&gt;
+
+// JavaScript strings
+&lt;script&gt;
+var message = '&lt;?= $block-&gt;escapeJs($message) ?&gt;';
+&lt;/script&gt;
+
+// CSS
+&lt;style&gt;
+.custom { color: &lt;?= $block-&gt;escapeCss($color) ?&gt;; }
+&lt;/style&gt;
+
+// Quotes (for attributes)
+&lt;input value="&lt;?= $block-&gt;escapeQuote($value) ?&gt;"/&gt;</pre>
+                </div>
+                
+                <div class="bg-red-50 p-3 rounded text-xs mb-2">
+                    <strong>❌ Bad (XSS vulnerable):</strong>
+                    <pre class="mt-2">&lt;div&gt;&lt;?= $block-&gt;getUserInput() ?&gt;&lt;/div&gt;
+&lt;script&gt;var name = '&lt;?= $userName ?&gt;';&lt;/script&gt;</pre>
+                </div>
+                
+                <div class="bg-green-50 p-3 rounded text-xs mb-2">
+                    <strong>✅ Good (XSS protected):</strong>
+                    <pre class="mt-2">&lt;div&gt;&lt;?= $block-&gt;escapeHtml($block-&gt;getUserInput()) ?&gt;&lt;/div&gt;
+&lt;script&gt;var name = '&lt;?= $block-&gt;escapeJs($userName) ?&gt;';&lt;/script&gt;</pre>
+                </div>
+                
+                <p class="text-sm text-gray-700 mt-2">Link: <a href="https://developer.adobe.com/commerce/php/development/" class="text-blue-600 hover:underline">Security - Cross-site scripting</a></p>
+            </div>
+
+            <div class="border-l-4 border-cyan-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Passing Data to JavaScript from XML</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Method 1: x-magento-init in layout XML</strong>
+                    <pre class="mt-2">&lt;block class="Vendor\Module\Block\Custom" name="custom.block" template="Vendor_Module::custom.phtml"&gt;
+    &lt;arguments&gt;
+        &lt;argument name="jsLayout" xsi:type="array"&gt;
+            &lt;item name="components" xsi:type="array"&gt;
+                &lt;item name="customComponent" xsi:type="array"&gt;
+                    &lt;item name="component" xsi:type="string"&gt;Vendor_Module/js/custom&lt;/item&gt;
+                    &lt;item name="config" xsi:type="array"&gt;
+                        &lt;item name="productId" xsi:type="string"&gt;123&lt;/item&gt;
+                        &lt;item name="apiUrl" xsi:type="string"&gt;/api/endpoint&lt;/item&gt;
+                    &lt;/item&gt;
+                &lt;/item&gt;
+            &lt;/item&gt;
+        &lt;/argument&gt;
+    &lt;/arguments&gt;
+&lt;/block&gt;</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Access in template:</strong>
+                    <pre class="mt-2">&lt;div id="custom-component" data-bind="scope: 'customComponent'"&gt;&lt;/div&gt;
+
+&lt;script type="text/x-magento-init"&gt;
+{
+    "*": {
+        "Magento_Ui/js/core/app": &lt;?= $block-&gt;escapeHtml(
+            $block-&gt;getJsLayout()
+        ) ?&gt;
+    }
+}
+&lt;/script&gt;</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Method 2: Inline script with data attributes</strong>
+                    <pre class="mt-2">// In template
+&lt;div id="widget" 
+     data-product-id="&lt;?= (int)$block-&gt;getProductId() ?&gt;"
+     data-config='&lt;?= $block-&gt;escapeHtmlAttr($block-&gt;getJsonConfig()) ?&gt;'&gt;
+&lt;/div&gt;
+
+&lt;script type="text/x-magento-init"&gt;
+{
+    "#widget": {
+        "Vendor_Module/js/widget": {
+            "productId": &lt;?= (int)$block-&gt;getProductId() ?&gt;,
+            "apiUrl": "&lt;?= $block-&gt;escapeJs($block-&gt;getApiUrl()) ?&gt;"
+        }
+    }
+}
+&lt;/script&gt;</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Access in JS module:</strong>
+                    <pre class="mt-2">define(['jquery'], function($) {
+    'use strict';
+    
+    return function(config, element) {
+        console.log(config.productId);  // from x-magento-init
+        console.log(config.apiUrl);
+        
+        // Or from data attributes
+        var productId = $(element).data('product-id');
+    };
+});</pre>
+                </div>
+            </div>
+
+            <div class="border-l-4 border-teal-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Using Helper in Arguments</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Call helper methods from XML:</strong>
+                    <pre class="mt-2">&lt;block class="Vendor\Module\Block\Custom" template="Vendor_Module::custom.phtml"&gt;
+    &lt;arguments&gt;
+        &lt;argument name="store_name" xsi:type="helper" 
+                  helper="Magento\Store\Helper\Data::getStoreName"/&gt;
+        
+        &lt;argument name="base_url" xsi:type="helper"
+                  helper="Magento\Framework\Url::getBaseUrl"/&gt;
+                  
+        &lt;argument name="custom_data" xsi:type="helper"
+                  helper="Vendor\Module\Helper\Data::getCustomData"&gt;
+            &lt;param name="param1"&gt;value1&lt;/param&gt;
+        &lt;/argument&gt;
+    &lt;/arguments&gt;
+&lt;/block&gt;</pre>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 p-4 rounded mt-6">
+                <p class="text-sm text-gray-700">
+                    📚 <strong>Reference:</strong> 
+                    <a href="https://developer.adobe.com/commerce/php/development/" class="text-blue-600 hover:underline">Adobe Commerce PHP Development</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

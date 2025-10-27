@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin, Page Builder & Optimization - Exam Prep</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Navigation -->
+        <nav class="mb-6">
+            <a href="index.html" class="inline-flex items-center text-blue-600 hover:text-blue-800">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Back to Dashboard
+            </a>
+        </nav>
+
+        <!-- Header -->
+        <header class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Admin, Page Builder & Optimization</h1>
+            <p class="text-gray-600">Admin UI customization, Page Builder, and performance optimization</p>
+        </header>
+
+        <!-- Content Area -->
+        <div class="bg-white rounded-lg shadow-md p-6 space-y-6">
+            
+            <div class="border-l-4 border-blue-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Admin UI Customization</h3>
+                <p class="text-gray-700 text-sm mb-3">Customize Admin using layout XML, UI components, and adminhtml area.</p>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Admin layout location:</strong>
+                    <pre class="mt-2">&lt;module_dir&gt;/view/adminhtml/layout/
+&lt;module_dir&gt;/view/adminhtml/ui_component/</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Add admin grid:</strong>
+                    <pre class="mt-2">&lt;listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+    &lt;columns name="vendor_grid_columns"&gt;
+        &lt;column name="id"&gt;
+            &lt;argument name="data" xsi:type="array"&gt;
+                &lt;item name="config" xsi:type="array"&gt;
+                    &lt;item name="label" xsi:type="string"&gt;ID&lt;/item&gt;
+                &lt;/item&gt;
+            &lt;/argument&gt;
+        &lt;/column&gt;
+    &lt;/columns&gt;
+&lt;/listing&gt;</pre>
+                </div>
+                
+                <p class="text-sm text-gray-700">Admin theme: <code class="bg-gray-100 px-1">app/design/adminhtml/&lt;Vendor&gt;/&lt;theme&gt;/</code></p>
+            </div>
+
+            <div class="border-l-4 border-green-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Page Builder Content Types</h3>
+                <p class="text-gray-700 text-sm mb-3">Adobe Commerce EE feature for drag-and-drop content creation.</p>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Custom content type structure:</strong>
+                    <pre class="mt-2">&lt;module_dir&gt;/view/adminhtml/pagebuilder/
+├── content_type/
+│   └── custom_type.xml
+├── preview_template/
+│   └── custom_type.html
+└── master_format/
+    └── custom_type.xml</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>content_type XML:</strong>
+                    <pre class="mt-2">&lt;config&gt;
+    &lt;type name="custom_type" 
+          label="Custom Type"
+          component="Vendor_Module/js/content-type/custom-type/preview"
+          form="pagebuilder_custom_type_form"&gt;
+    &lt;/type&gt;
+&lt;/config&gt;</pre>
+                </div>
+                
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                    <li>Preview component (adminhtml JS)</li>
+                    <li>Master format (frontend rendering)</li>
+                    <li>Form configuration (UI component)</li>
+                </ul>
+            </div>
+
+            <div class="border-l-4 border-purple-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Performance Optimization</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Key optimizations:</strong>
+                    <pre class="mt-2">1. Enable all caches
+2. Enable flat catalog (if using)
+3. Merge/minify CSS/JS
+4. Enable production mode
+5. Use Redis/Varnish
+6. Optimize images</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Commands:</strong>
+                    <pre class="mt-2">bin/magento deploy:mode:set production
+bin/magento cache:enable
+bin/magento indexer:reindex
+bin/magento setup:di:compile
+bin/magento setup:static-content:deploy</pre>
+                </div>
+                
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                    <li>Lazy loading images</li>
+                    <li>Defer non-critical JavaScript</li>
+                    <li>Use CDN for static content</li>
+                </ul>
+            </div>
+
+            <div class="border-l-4 border-orange-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Caching Strategies</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Cache types:</strong>
+                    <pre class="mt-2">config          - Configuration
+layout          - Layout XML
+block_html      - Block HTML (most important for FE)
+collections     - Collections data
+reflection      - API reflection
+db_ddl          - Database schema
+eav             - EAV types & attributes
+customer_notification
+config_integration
+config_webservice
+full_page       - Full Page Cache (FPC)</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Full Page Cache (FPC):</strong>
+                    <pre class="mt-2">// Mark block as cacheable
+protected $_isScopePrivate = false;
+
+// Cache tags
+public function getIdentities() {
+    return ['custom_cache_tag'];
+}
+
+// Cache key info
+public function getCacheKeyInfo() {
+    return ['CUSTOM_CACHE', $this->getData('id')];
+}</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Private content (customer-specific):</strong>
+                    <pre class="mt-2">// Use customer sections for dynamic data
+&lt;div data-bind="scope: 'customer'"&gt;
+    &lt;span data-bind="text: customer().fullname"&gt;&lt;/span&gt;
+&lt;/div&gt;</pre>
+                </div>
+                
+                <p class="text-sm text-gray-700 mt-2">Link: <a href="https://developer.adobe.com/commerce/php/development/" class="text-blue-600 hover:underline">Partial caching & Full page caching</a></p>
+            </div>
+
+            <div class="border-l-4 border-red-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Indexing & Data Management</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Index management:</strong>
+                    <pre class="mt-2">bin/magento indexer:info
+bin/magento indexer:status
+bin/magento indexer:reindex
+bin/magento indexer:set-mode {realtime|schedule}</pre>
+                </div>
+                
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                    <li>Use schedule mode in production</li>
+                    <li>Configure cron for scheduled indexing</li>
+                    <li>Link: <a href="https://developer.adobe.com/commerce/php/development/" class="text-blue-600 hover:underline">Indexing optimization</a></li>
+                </ul>
+            </div>
+
+            <div class="border-l-4 border-emerald-600 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Fastly CDN & Caching</h3>
+                <p class="text-gray-700 text-sm mb-3">Fastly is the recommended CDN for Adobe Commerce Cloud. Critical for performance optimization.</p>
+                
+                <div class="bg-yellow-50 border border-yellow-200 p-3 rounded text-xs mb-3">
+                    <strong class="text-yellow-800">🎯 What is Fastly?</strong>
+                    <p class="mt-2 text-xs">Fastly is a CDN (Content Delivery Network) and edge cloud platform that caches content at edge locations worldwide. 
+                    For Adobe Commerce Cloud, Fastly is included and pre-configured.</p>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Fastly Configuration in Admin:</strong>
+                    <pre class="mt-2">Stores → Configuration → Advanced → System → Full Page Cache
+
+Caching Application: Fastly CDN
+
+Fastly Configuration:
+- Fastly Service ID (from Cloud project)
+- Fastly API Token (from Cloud project)
+- Backend name: typically "backend"
+- Test connection
+
+After setup:
+- Upload VCL to Fastly (via admin)
+- Configure Edge modules (Image Optimization, etc.)</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Fastly VCL Snippets:</strong>
+                    <pre class="mt-2">VCL (Varnish Configuration Language) customizes caching behavior:
+
+Common snippets:
+- Bypass for specific URLs
+- Custom headers
+- Geographic redirects
+- URL rewrites
+- Bot detection
+
+Upload via: Admin → Fastly Configuration → Upload VCL to Fastly</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Cache Purging with Fastly:</strong>
+                    <pre class="mt-2">// Purge all Fastly cache
+bin/magento cache:clean full_page
+
+// Purge specific cache tags
+use Magento\Framework\App\CacheInterface;
+
+$this->cache->clean(['cat_p_' . $productId]);
+
+// Soft purge (serve stale while revalidating)
+X-Magento-Tags-Pattern: cat_p
+
+// Hard purge (immediate)
+Fastly-Soft-Purge: 0</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Fastly Edge Modules:</strong>
+                    <pre class="mt-2">Image Optimization:
+- Automatic WebP conversion
+- Lazy loading
+- Responsive images
+- Quality optimization
+
+GeoIP:
+- Country/region detection
+- Currency/language switching
+- Geographic redirects
+
+Web Application Firewall (WAF):
+- DDoS protection
+- OWASP rules
+- Custom blocking rules</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Cache Control Headers:</strong>
+                    <pre class="mt-2">In Block classes:
+
+// Set cache lifetime
+protected $_cacheLifetime = 3600; // 1 hour
+
+// Set cache tags
+public function getIdentities() {
+    return [
+        \Magento\Catalog\Model\Product::CACHE_TAG . '_' . $this->getProductId(),
+        \Magento\Store\Model\Store::CACHE_TAG . '_' . $this->_storeManager->getStore()->getId()
+    ];
+}
+
+// Set cache key
+public function getCacheKeyInfo() {
+    return [
+        'CUSTOM_BLOCK',
+        $this->_storeManager->getStore()->getId(),
+        $this->getData('product_id')
+    ];
+}</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Surrogate-Key Headers:</strong>
+                    <pre class="mt-2">Fastly uses surrogate keys for cache tagging:
+
+Header: Surrogate-Key: cat_p_123 store_1 cms_b_5
+
+Purge by surrogate key:
+curl -X PURGE "https://yourdomain.com" \
+  -H "Fastly-Key: YOUR_API_KEY" \
+  -H "Surrogate-Key: cat_p_123"</pre>
+                </div>
+                
+                <div class="bg-blue-50 p-3 rounded text-xs mb-2">
+                    <strong>Testing Fastly:</strong>
+                    <pre class="mt-2">Check response headers:
+
+X-Cache: HIT, HIT    // Served from Fastly cache
+X-Cache: MISS, MISS  // Not in cache, fetched from origin
+Fastly-Debug-Path: (cache-server-info)
+Age: 120             // Seconds in cache
+
+Test with curl:
+curl -I https://yourdomain.com</pre>
+                </div>
+                
+                <div class="bg-red-50 border border-red-200 p-3 rounded text-xs mt-3">
+                    <strong class="text-red-800">🔥 Fastly Exam Points:</strong>
+                    <ul class="list-disc list-inside text-xs mt-2 space-y-1">
+                        <li>Fastly is CDN + edge cloud platform (not just caching)</li>
+                        <li>Included with Adobe Commerce Cloud</li>
+                        <li>Uses Varnish Cache Language (VCL) for customization</li>
+                        <li>Surrogate keys for cache tagging & selective purging</li>
+                        <li>X-Cache header shows HIT/MISS status</li>
+                        <li>Edge modules: Image Optimization, GeoIP, WAF</li>
+                        <li>Soft purge = serve stale while revalidating</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-green-50 p-3 rounded text-xs mt-3">
+                    <strong class="text-green-800">💡 Frontend Developer Responsibilities:</strong>
+                    <ul class="list-disc list-inside text-xs mt-2 space-y-1">
+                        <li>Set proper cache tags in blocks (getIdentities)</li>
+                        <li>Configure cache lifetime for blocks</li>
+                        <li>Use ESI (Edge Side Includes) for dynamic blocks</li>
+                        <li>Test cache behavior with X-Cache headers</li>
+                        <li>Optimize images using Fastly Image Optimization</li>
+                        <li>Avoid caching customer-specific content</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 p-4 rounded mt-6">
+                <p class="text-sm text-gray-700">
+                    📚 <strong>Reference:</strong> 
+                    <a href="https://developer.adobe.com/commerce/php/development/" class="text-blue-600 hover:underline">Adobe Commerce PHP Development</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

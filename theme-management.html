@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theme Management - Exam Prep</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Navigation -->
+        <nav class="mb-6">
+            <a href="index.html" class="inline-flex items-center text-blue-600 hover:text-blue-800">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Back to Dashboard
+            </a>
+        </nav>
+
+        <!-- Header -->
+        <header class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Theme Management</h1>
+            <p class="text-gray-600">Theme structure, inheritance, and deployment</p>
+        </header>
+
+        <!-- Content Area -->
+        <div class="bg-white rounded-lg shadow-md p-6 space-y-6">
+            
+            <div class="border-l-4 border-blue-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Theme Structure</h3>
+                <p class="text-gray-700 text-sm mb-3">Themes are <a href="https://developer.adobe.com/commerce/php/development/" class="text-blue-600 hover:underline">components</a> that personalize the storefront or Admin UI.</p>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs font-mono mb-2">
+app/design/frontend/&lt;Vendor&gt;/&lt;theme&gt;/<br>
+├── &lt;Vendor&gt;_&lt;Module&gt;/<br>
+│   ├── web/<br>
+│   ├── layout/<br>
+│   └── templates/<br>
+├── web/<br>
+│   ├── css/<br>
+│   ├── js/<br>
+│   └── images/<br>
+├── media/<br>
+├── i18n/<br>
+├── theme.xml<br>
+├── registration.php<br>
+└── composer.json
+                </div>
+                
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                    <li><code class="bg-gray-100 px-1">theme.xml</code> - declares theme name, parent theme</li>
+                    <li><code class="bg-gray-100 px-1">registration.php</code> - registers theme with Magento</li>
+                    <li>Default themes: Blank & Luma</li>
+                </ul>
+            </div>
+
+            <div class="border-l-4 border-cyan-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">🎯 File Types & Folder Structure - Exam Critical!</h3>
+                <p class="text-gray-700 text-sm mb-3">Know where each file type belongs</p>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>templates/ - PHTML files (PHP + HTML templates):</strong>
+                    <pre class="mt-2">&lt;theme_dir&gt;/&lt;Vendor&gt;_&lt;Module&gt;/templates/
+└── custom.phtml
+
+Example: app/design/frontend/Acme/theme/Magento_Catalog/templates/product/view.phtml
+
+Content: PHP template files rendered by block classes</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>layout/ - Layout XML files:</strong>
+                    <pre class="mt-2">&lt;theme_dir&gt;/&lt;Vendor&gt;_&lt;Module&gt;/layout/
+├── default.xml
+├── catalog_product_view.xml
+└── override/
+    └── base/
+        └── catalog_product_view.xml
+
+Content: XML files defining page structure (blocks, containers)</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>web/css/ - LESS/CSS files:</strong>
+                    <pre class="mt-2">&lt;theme_dir&gt;/web/css/
+├── source/
+│   ├── _extend.less       // Extend parent theme
+│   ├── _theme.less        // Custom theme styles
+│   └── _variables.less    // Override LESS variables
+├── styles-m.less          // Mobile entry point
+└── styles-l.less          // Desktop entry point
+
+Content: LESS files (compiled to CSS)</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>web/js/ - Theme JavaScript (vanilla JS, custom libraries):</strong>
+                    <pre class="mt-2">&lt;theme_dir&gt;/web/js/
+├── theme.js
+└── custom-library.js
+
+Content: Plain JavaScript, jQuery plugins, 3rd party libraries
+NOT for RequireJS modules or Knockout components (those go in module/view)</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Module view/frontend/web/js/ - RequireJS & Knockout:</strong>
+                    <pre class="mt-2">&lt;module_dir&gt;/view/frontend/web/js/
+├── view/
+│   └── custom-component.js    // Knockout UI components
+├── model/
+│   └── data-model.js
+└── custom-widget.js           // jQuery widgets
+
+Content: RequireJS AMD modules, Knockout.js components, UI components
+Used with x-magento-init</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>web/images/ - Theme images:</strong>
+                    <pre class="mt-2">&lt;theme_dir&gt;/web/images/
+├── logo.svg
+└── icons/
+    └── cart.svg
+
+Content: Theme-specific images (logos, icons, backgrounds)</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>media/ - Theme preview:</strong>
+                    <pre class="mt-2">&lt;theme_dir&gt;/media/
+└── preview.jpg
+
+Content: Theme preview image shown in admin</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>i18n/ - Translation files:</strong>
+                    <pre class="mt-2">&lt;theme_dir&gt;/i18n/
+├── en_US.csv
+└── de_DE.csv
+
+Content: Translation CSV files for theme-specific strings</pre>
+                </div>
+                
+                <div class="bg-red-50 border border-red-200 p-3 rounded text-xs mt-3">
+                    <strong class="text-red-800">🔥 Quick Reference:</strong>
+                    <ul class="list-disc list-inside text-xs mt-2 space-y-1">
+                        <li><strong>.phtml</strong> → templates/ folder</li>
+                        <li><strong>.xml (layout)</strong> → layout/ folder</li>
+                        <li><strong>.less/.css</strong> → web/css/ folder</li>
+                        <li><strong>Knockout.js</strong> → module/view/frontend/web/js/view/</li>
+                        <li><strong>RequireJS modules</strong> → module/view/frontend/web/js/</li>
+                        <li><strong>Theme JS</strong> → theme/web/js/</li>
+                        <li><strong>Images</strong> → web/images/</li>
+                        <li><strong>Translations</strong> → i18n/</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-l-4 border-green-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Theme Inheritance</h3>
+                <p class="text-gray-700 text-sm mb-3">Themes can inherit from parent themes. Child themes override or extend parent files.</p>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>theme.xml example:</strong>
+                    <pre class="mt-2 text-xs">&lt;theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xsi:noNamespaceSchemaLocation="urn:magento:framework:Config/etc/theme.xsd"&gt;
+    &lt;title&gt;Custom Theme&lt;/title&gt;
+    &lt;parent&gt;Magento/blank&lt;/parent&gt;
+&lt;/theme&gt;</pre>
+                </div>
+                
+                <p class="text-sm text-gray-600">Fallback order: Custom Theme → Parent Theme → Module default</p>
+            </div>
+
+            <div class="border-l-4 border-purple-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Theme Configuration</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>registration.php:</strong>
+                    <pre class="mt-2 text-xs">use Magento\Framework\Component\ComponentRegistrar;
+
+ComponentRegistrar::register(
+    ComponentRegistrar::THEME,
+    'frontend/Vendor/theme',
+    __DIR__
+);</pre>
+                </div>
+                
+                <p class="text-sm text-gray-700 mt-2">Activate via Admin: <code class="bg-gray-100 px-1">Content → Design → Configuration</code></p>
+            </div>
+
+            <div class="border-l-4 border-orange-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Static Content Deployment</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <pre>bin/magento setup:static-content:deploy
+bin/magento setup:static-content:deploy en_US -t Vendor/theme
+bin/magento setup:static-content:deploy -f  # force</pre>
+                </div>
+                
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                    <li>Generates static files in <code class="bg-gray-100 px-1">pub/static/</code></li>
+                    <li>Production mode requires deployment</li>
+                    <li>Developer mode generates on-the-fly</li>
+                </ul>
+            </div>
+
+            <div class="border-l-4 border-red-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">🎯 Fallback Logic - Critical for Exam!</h3>
+                <p class="text-gray-700 text-sm mb-3">Magento uses a fallback mechanism to locate theme files. Understanding this is essential.</p>
+                
+                <div class="bg-yellow-50 border border-yellow-200 p-3 rounded text-xs mb-3">
+                    <strong class="text-yellow-800">⚡ Fallback Order for Templates & Layouts:</strong>
+                    <pre class="mt-2 text-xs">1. &lt;theme_dir&gt;/&lt;Vendor&gt;_&lt;Module&gt;/templates/
+2. &lt;parent_theme_dir&gt;/&lt;Vendor&gt;_&lt;Module&gt;/templates/
+3. &lt;grandparent_theme_dir&gt;/&lt;Vendor&gt;_&lt;Module&gt;/templates/
+4. &lt;module_dir&gt;/view/frontend/templates/ (module default)</pre>
+                </div>
+                
+                <div class="bg-yellow-50 border border-yellow-200 p-3 rounded text-xs mb-3">
+                    <strong class="text-yellow-800">⚡ Fallback Order for Static Files (CSS, JS, images):</strong>
+                    <pre class="mt-2 text-xs">1. &lt;theme_dir&gt;/web/
+2. &lt;theme_dir&gt;/&lt;Vendor&gt;_&lt;Module&gt;/web/
+3. &lt;parent_theme_dir&gt;/web/
+4. &lt;parent_theme_dir&gt;/&lt;Vendor&gt;_&lt;Module&gt;/web/
+5. &lt;module_dir&gt;/view/frontend/web/ (module default)
+6. lib/web/ (Magento library)</pre>
+                </div>
+                
+                <div class="bg-blue-50 p-3 rounded text-xs mb-2">
+                    <strong>Example - Resolving product/view.phtml:</strong>
+                    <pre class="mt-2">Looking for: Magento_Catalog::product/view.phtml
+
+Search order:
+1. app/design/frontend/Acme/custom/Magento_Catalog/templates/product/view.phtml
+2. app/design/frontend/Magento/blank/Magento_Catalog/templates/product/view.phtml
+3. vendor/magento/module-catalog/view/frontend/templates/product/view.phtml ✓
+
+First found = used</pre>
+                </div>
+            </div>
+
+            <div class="border-l-4 border-pink-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Overriding Templates</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Override module template in theme:</strong>
+                    <pre class="mt-2">Module template location:
+vendor/magento/module-catalog/view/frontend/templates/product/list.phtml
+
+Override in theme:
+app/design/frontend/Vendor/theme/Magento_Catalog/templates/product/list.phtml
+
+Structure:
+&lt;theme_dir&gt;/&lt;Namespace&gt;_&lt;Module&gt;/templates/&lt;path/to/template.phtml&gt;</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Steps to override:</strong>
+                    <pre class="mt-2">1. Identify module template path
+2. Create matching directory in theme
+3. Copy template to theme (or create new)
+4. Modify as needed
+5. Clear cache: bin/magento cache:clean</pre>
+                </div>
+                
+                <p class="text-sm text-yellow-700 bg-yellow-50 p-2 rounded mt-2">
+                    ⚠️ <strong>Important:</strong> Templates are NOT merged - first found wins entirely
+                </p>
+            </div>
+
+            <div class="border-l-4 border-indigo-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Overriding Layout XML</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Override vs Extend:</strong>
+                    <pre class="mt-2">Extend (default - files MERGE):
+&lt;theme_dir&gt;/&lt;Vendor&gt;_&lt;Module&gt;/layout/catalog_product_view.xml
+
+Override (complete replacement):
+&lt;theme_dir&gt;/&lt;Vendor&gt;_&lt;Module&gt;/layout/override/base/catalog_product_view.xml
+&lt;theme_dir&gt;/&lt;Vendor&gt;_&lt;Module&gt;/layout/override/&lt;Parent_Vendor&gt;_&lt;parent_theme&gt;/catalog_product_view.xml</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Example - Extend layout (merge):</strong>
+                    <pre class="mt-2">File: app/design/frontend/Acme/theme/Magento_Catalog/layout/catalog_product_view.xml
+
+&lt;?xml version="1.0"?&gt;
+&lt;page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+    &lt;body&gt;
+        &lt;referenceBlock name="product.info" remove="true"/&gt;
+    &lt;/body&gt;
+&lt;/page&gt;
+
+Result: Merges with module layout + parent theme layout</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Example - Override layout (replace):</strong>
+                    <pre class="mt-2">File: app/design/frontend/Acme/theme/Magento_Catalog/layout/override/base/catalog_product_view.xml
+
+Result: Completely replaces module's catalog_product_view.xml</pre>
+                </div>
+                
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mt-2">
+                    <li><strong>Extend:</strong> Layout files merge (most common)</li>
+                    <li><strong>Override base:</strong> Replace module layout entirely</li>
+                    <li><strong>Override theme:</strong> Replace parent theme layout</li>
+                </ul>
+            </div>
+
+            <div class="border-l-4 border-cyan-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Overriding Static Files (CSS, JS, Images)</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Override module static file:</strong>
+                    <pre class="mt-2">Module file:
+vendor/magento/module-catalog/view/frontend/web/css/source/_module.less
+
+Override in theme:
+app/design/frontend/Vendor/theme/Magento_Catalog/web/css/source/_module.less</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Theme-level static files:</strong>
+                    <pre class="mt-2">app/design/frontend/Vendor/theme/web/
+├── css/
+│   ├── source/
+│   │   ├── _extend.less
+│   │   └── _theme.less
+│   ├── styles-m.less
+│   └── styles-l.less
+├── js/
+│   └── theme.js
+└── images/
+    └── logo.svg</pre>
+                </div>
+                
+                <p class="text-sm text-gray-700 mt-2">Static files also follow fallback: Current theme → Parent theme → Module → lib/web/</p>
+            </div>
+
+            <div class="border-l-4 border-teal-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Module Fallback & Dependencies</h3>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>When module files are used:</strong>
+                    <pre class="mt-2">Module files are the DEFAULT fallback when:
+- No theme override exists
+- No parent theme override exists
+
+Modules define default UI components:
+vendor/magento/module-catalog/
+├── view/frontend/
+│   ├── layout/
+│   ├── templates/
+│   └── web/</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Disabling module output:</strong>
+                    <pre class="mt-2">// Disable module frontend output (keep functionality)
+bin/magento module:disable Vendor_Module --clear-static-content
+
+// or via layout XML
+&lt;page&gt;
+    &lt;body&gt;
+        &lt;referenceBlock name="block.name" remove="true"/&gt;
+    &lt;/body&gt;
+&lt;/page&gt;</pre>
+                </div>
+            </div>
+
+            <div class="border-l-4 border-purple-600 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Complete Fallback Flow Diagram</h3>
+                
+                <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded text-xs mb-2">
+                    <pre class="text-xs font-mono">Request: Magento_Catalog::product/view.phtml
+
+┌─────────────────────────────────────────────────────────┐
+│  1. Current Theme (Acme/custom)                         │
+│     app/design/frontend/Acme/custom/                    │
+│     └── Magento_Catalog/templates/product/view.phtml    │
+│                                                         │
+│     ❌ Not Found → Go to step 2                         │
+└─────────────────────────────────────────────────────────┘
+                         ↓
+┌─────────────────────────────────────────────────────────┐
+│  2. Parent Theme (Magento/blank)                        │
+│     app/design/frontend/Magento/blank/                  │
+│     └── Magento_Catalog/templates/product/view.phtml    │
+│                                                         │
+│     ❌ Not Found → Go to step 3                         │
+└─────────────────────────────────────────────────────────┘
+                         ↓
+┌─────────────────────────────────────────────────────────┐
+│  3. Module Default                                      │
+│     vendor/magento/module-catalog/                      │
+│     └── view/frontend/templates/product/view.phtml      │
+│                                                         │
+│     ✅ FOUND - Use this file!                           │
+└─────────────────────────────────────────────────────────┘</pre>
+                </div>
+                
+                <div class="bg-red-50 border border-red-200 p-3 rounded text-sm mt-3">
+                    <strong class="text-red-800">🔥 Key Exam Points:</strong>
+                    <ul class="list-disc list-inside mt-2 space-y-1 text-xs">
+                        <li>Fallback is hierarchical: Theme → Parent → Module</li>
+                        <li>Templates: First found wins (NO merge)</li>
+                        <li>Layouts: ALL files merge (unless in override/ folder)</li>
+                        <li>Static files follow same hierarchy</li>
+                        <li>Override folders provide complete replacement</li>
+                        <li>Developer mode: symlinks; Production: copies to pub/static/</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-l-4 border-yellow-600 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Translation / i18n (Internationalization)</h3>
+                <p class="text-gray-700 text-sm mb-3">Magento uses CSV files and __() function for translations</p>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Inline Translation in Templates (.phtml):</strong>
+                    <pre class="mt-2">&lt;?php
+// Basic translation
+echo __('Add to Cart');
+
+// Translation with variable
+echo __('Price: %1', $price);
+
+// Multiple variables
+echo __('Product: %1, Price: %2', $productName, $price);
+
+// Translation in attributes
+?&gt;
+&lt;button title="&lt;?= $block->escapeHtmlAttr(__('Add to Cart')) ?&gt;"&gt;
+    &lt;?= __('Add to Cart') ?&gt;
+&lt;/button&gt;</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Translation in Layout XML:</strong>
+                    <pre class="mt-2">&lt;block name="custom.block"&gt;
+    &lt;arguments&gt;
+        &lt;argument name="title" xsi:type="string" translate="true"&gt;My Title&lt;/argument&gt;
+    &lt;/arguments&gt;
+&lt;/block&gt;
+
+The translate="true" attribute marks the string for translation</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Translation in JavaScript/Knockout:</strong>
+                    <pre class="mt-2">define(['jquery', 'mage/translate'], function($, $t) {
+    // Using $t for translation
+    var message = $t('Add to Cart');
+    
+    // With variable
+    var message = $t('Price: %1').replace('%1', price);
+    
+    return {
+        getMessage: function() {
+            return $t('Hello World');
+        }
+    };
+});</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Translation CSV file structure:</strong>
+                    <pre class="mt-2">Location: 
+- Module: &lt;module_dir&gt;/i18n/en_US.csv
+- Theme: &lt;theme_dir&gt;/i18n/en_US.csv
+
+Format: "Original String","Translated String"
+
+Example en_US.csv:
+"Add to Cart","Add to Cart"
+"Price: %1","Price: %1"
+"Product: %1, Price: %2","Product: %1, Price: %2"
+
+Example de_DE.csv:
+"Add to Cart","In den Warenkorb"
+"Price: %1","Preis: %1"
+"Product: %1, Price: %2","Produkt: %1, Preis: %2"</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Translation Priority (fallback order):</strong>
+                    <pre class="mt-2">1. Database (Stores → Configuration → Translate Inline)
+2. Theme translation (theme/i18n/en_US.csv)
+3. Module translation (module/i18n/en_US.csv)
+4. Magento core translation (lib/i18n/)
+5. Original string (if no translation found)</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Create translation dictionary:</strong>
+                    <pre class="mt-2">// For theme
+app/design/frontend/Vendor/theme/i18n/en_US.csv
+app/design/frontend/Vendor/theme/i18n/de_DE.csv
+
+// For module
+app/code/Vendor/Module/i18n/en_US.csv
+app/code/Vendor/Module/i18n/de_DE.csv
+
+After adding translations:
+bin/magento cache:clean translate
+bin/magento setup:static-content:deploy</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Inline Translation in Admin:</strong>
+                    <pre class="mt-2">Stores → Configuration → Advanced → Developer → Translate Inline
+
+Enable for Storefront: Yes
+Enable for Admin: Yes
+
+On frontend: Click text to edit translation (shown with red border)
+Saves to database (highest priority)</pre>
+                </div>
+                
+                <div class="bg-blue-50 p-3 rounded text-xs mb-2">
+                    <strong>Pluralization:</strong>
+                    <pre class="mt-2">// In template
+&lt;?= __('%1 item', $count) ?&gt;
+&lt;?= __('%1 items', $count) ?&gt;
+
+// Better approach with ternary
+&lt;?= $count === 1 ? __('%1 item', $count) : __('%1 items', $count) ?&gt;</pre>
+                </div>
+                
+                <div class="bg-red-50 border border-red-200 p-3 rounded text-xs mt-3">
+                    <strong class="text-red-800">🔥 Translation Exam Points:</strong>
+                    <ul class="list-disc list-inside text-xs mt-2 space-y-1">
+                        <li>Use <code>__()</code> function for translations in PHP/templates</li>
+                        <li>Use <code>$t()</code> for translations in JavaScript</li>
+                        <li>CSV format: "Original","Translation"</li>
+                        <li>%1, %2 for variable placeholders</li>
+                        <li>Always escape translated output: <code>escapeHtml(__('text'))</code></li>
+                        <li>Theme translations override module translations</li>
+                        <li>Locale set by: Stores → Configuration → General → Locale</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-l-4 border-emerald-600 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Creating a New Module</h3>
+                <p class="text-gray-700 text-sm mb-3">Modules extend Magento functionality. Understanding module structure is crucial.</p>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Module Directory Structure:</strong>
+                    <pre class="mt-2">app/code/&lt;Vendor&gt;/&lt;ModuleName&gt;/
+├── Api/                      // Service contracts
+├── Block/                    // Block classes
+├── Controller/               // Controllers
+├── etc/
+│   ├── module.xml           // Module declaration (REQUIRED)
+│   ├── di.xml               // Dependency injection
+│   ├── acl.xml              // Access Control List
+│   └── frontend/
+│       └── routes.xml       // Frontend routes
+├── Helper/                   // Helper classes
+├── Model/                    // Models & Resource Models
+├── Observer/                 // Event observers
+├── Plugin/                   // Plugins (interceptors)
+├── Setup/                    // Install/upgrade scripts
+├── ViewModel/                // View models
+├── view/
+│   └── frontend/
+│       ├── layout/          // Layout XML
+│       ├── templates/       // .phtml templates
+│       ├── web/
+│       │   ├── css/         // CSS/LESS
+│       │   ├── js/          // JavaScript
+│       │   └── images/      // Images
+│       └── requirejs-config.js
+├── registration.php         // Module registration (REQUIRED)
+└── composer.json            // Composer config</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Step 1: Create registration.php (REQUIRED):</strong>
+                    <pre class="mt-2">// app/code/Vendor/ModuleName/registration.php
+&lt;?php
+use Magento\Framework\Component\ComponentRegistrar;
+
+ComponentRegistrar::register(
+    ComponentRegistrar::MODULE,
+    'Vendor_ModuleName',
+    __DIR__
+);</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Step 2: Create etc/module.xml (REQUIRED):</strong>
+                    <pre class="mt-2">// app/code/Vendor/ModuleName/etc/module.xml
+&lt;?xml version="1.0"?&gt;
+&lt;config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd"&gt;
+    &lt;module name="Vendor_ModuleName" setup_version="1.0.0"&gt;
+        &lt;sequence&gt;
+            &lt;!-- Dependencies (load after these modules) --&gt;
+            &lt;module name="Magento_Catalog"/&gt;
+            &lt;module name="Magento_Checkout"/&gt;
+        &lt;/sequence&gt;
+    &lt;/module&gt;
+&lt;/config&gt;</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Step 3: Create composer.json (optional but recommended):</strong>
+                    <pre class="mt-2">{
+    "name": "vendor/module-name",
+    "description": "Custom Module",
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "require": {
+        "php": "~8.1.0||~8.2.0||~8.3.0",
+        "magento/framework": "103.0.*"
+    },
+    "autoload": {
+        "files": ["registration.php"],
+        "psr-4": {
+            "Vendor\\ModuleName\\": ""
+        }
+    }
+}</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Step 4: Enable the module:</strong>
+                    <pre class="mt-2">bin/magento module:enable Vendor_ModuleName
+bin/magento setup:upgrade
+bin/magento setup:di:compile
+bin/magento setup:static-content:deploy (if production)
+bin/magento cache:clean</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Step 5: Create frontend routes (if needed):</strong>
+                    <pre class="mt-2">// etc/frontend/routes.xml
+&lt;?xml version="1.0"?&gt;
+&lt;config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd"&gt;
+    &lt;router id="standard"&gt;
+        &lt;route id="customroute" frontName="customroute"&gt;
+            &lt;module name="Vendor_ModuleName"/&gt;
+        &lt;/route&gt;
+    &lt;/router&gt;
+&lt;/config&gt;
+
+Access: yourdomain.com/customroute/controller/action</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Example Controller:</strong>
+                    <pre class="mt-2">// Controller/Index/Index.php
+&lt;?php
+namespace Vendor\ModuleName\Controller\Index;
+
+use Magento\Framework\App\Action\Action;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\View\Result\PageFactory;
+
+class Index extends Action
+{
+    protected $pageFactory;
+
+    public function __construct(
+        Context $context,
+        PageFactory $pageFactory
+    ) {
+        parent::__construct($context);
+        $this->pageFactory = $pageFactory;
+    }
+
+    public function execute()
+    {
+        return $this->pageFactory->create();
+    }
+}</pre>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
+                    <strong>Example Block:</strong>
+                    <pre class="mt-2">// Block/CustomBlock.php
+&lt;?php
+namespace Vendor\ModuleName\Block;
+
+use Magento\Framework\View\Element\Template;
+
+class CustomBlock extends Template
+{
+    public function getCustomData()
+    {
+        return 'Hello from custom module!';
+    }
+}</pre>
+                </div>
+                
+                <div class="bg-blue-50 p-3 rounded text-xs mt-3">
+                    <strong>Useful Commands:</strong>
+                    <pre class="mt-2">bin/magento module:status                    # Check module status
+bin/magento module:enable Vendor_ModuleName  # Enable module
+bin/magento module:disable Vendor_ModuleName # Disable module
+bin/magento module:uninstall Vendor_ModuleName # Uninstall (if setup script exists)</pre>
+                </div>
+                
+                <div class="bg-red-50 border border-red-200 p-3 rounded text-xs mt-3">
+                    <strong class="text-red-800">🔥 Exam Critical Points:</strong>
+                    <ul class="list-disc list-inside text-xs mt-2 space-y-1">
+                        <li>Two REQUIRED files: registration.php & etc/module.xml</li>
+                        <li>Module naming: Vendor_ModuleName (PSR-4)</li>
+                        <li>&lt;sequence&gt; defines load order dependencies</li>
+                        <li>Always run setup:upgrade after creating/modifying module</li>
+                        <li>Modules in app/code/ or vendor/ (composer)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 p-4 rounded mt-6">
+                <p class="text-sm text-gray-700">
+                    📚 <strong>Reference:</strong> 
+                    <a href="https://developer.adobe.com/commerce/php/development/" class="text-blue-600 hover:underline">Adobe Commerce PHP Development</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
