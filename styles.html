@@ -352,6 +352,19 @@ public function getCustomColor() {
             </div>
         </div>
     </div>
+
+    <!-- Scroll to Top Button -->
+    <button x-data="{ show: false }" 
+            x-show="show"
+            @scroll.window="show = window.pageYOffset > 300"
+            @click="window.scrollTo({ top: 0, behavior: 'smooth' })"
+            x-transition
+            class="fixed bottom-10 right-10 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition-all z-50"
+            style="display: none;">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+        </svg>
+    </button>
 </body>
 </html>
 
