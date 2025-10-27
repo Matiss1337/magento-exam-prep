@@ -39,7 +39,7 @@
                 </div>
                 
                 <div class="bg-gray-50 p-3 rounded text-xs mb-2">
-                    <strong>Example configuration:</strong>
+                    <strong>Complete config example:</strong>
                     <pre class="mt-2">var config = {
     map: {
         '*': {
@@ -54,15 +54,103 @@
         'slick': {
             deps: ['jquery']
         }
-    }
+    },
+    config: {
+        mixins: {
+            'Magento_Checkout/js/view/cart': {
+                'Vendor_Module/js/cart-mixin': true
+            }
+        }
+    },
+    deps: [
+        'Vendor_Module/js/global-init'
+    ]
 };</pre>
                 </div>
                 
-                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-                    <li><code class="bg-gray-100 px-1">map</code> - alias module names</li>
-                    <li><code class="bg-gray-100 px-1">paths</code> - define module paths</li>
-                    <li><code class="bg-gray-100 px-1">shim</code> - configure non-AMD libraries</li>
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-3">
+                    <li><code class="bg-gray-100 px-1">map</code> - alias module names, available globally with '*'</li>
+                    <li><code class="bg-gray-100 px-1">paths</code> - define module paths (without .js extension)</li>
+                    <li><code class="bg-gray-100 px-1">shim</code> - configure non-AMD libraries - loads ALL dependencies BEFORE loading the module (see below)</li>
+                    <li><code class="bg-gray-100 px-1">config.mixins</code> - define mixins for extending modules</li>
+                    <li><code class="bg-gray-100 px-1">deps</code> - auto-load modules on every page</li>
                 </ul>
+                
+                <div class="bg-orange-50 p-3 rounded text-xs mb-2">
+                    <strong>📦 What are non-AMD libraries?</strong>
+                    <p class="mt-2 mb-2">
+                        <strong>AMD (Asynchronous Module Definition)</strong> = module pattern with <code class="bg-gray-100 px-1">define()</code>
+                    </p>
+                    <pre class="mb-2">// AMD library (Magento standard)
+define(['jquery'], function($) {
+    return { /* module */ };
+});</pre>
+                    <p class="mb-2">
+                        <strong>Non-AMD</strong> = old-school JS that doesn't use define(), like jQuery plugins, vanilla libraries
+                    </p>
+                    <pre class="mb-2">// Non-AMD library (old style)
+(function($) {
+    $.fn.slickSlider = function() { /* ... */ };
+})(jQuery);</pre>
+                    <p class="mt-2 text-gray-600">
+                        ⚠️ Non-AMD libraries don't declare dependencies<br>
+                        ⚠️ RequireJS doesn't know what they need<br>
+                        ✓ Use <code class="bg-gray-100 px-1">shim</code> to tell RequireJS: "load jQuery first, then this library"
+                    </p>
+                    <pre class="mt-2">shim: {
+    'slick': {
+        deps: ['jquery']  // load jquery before slick
+    },
+    'bootstrap': {
+        deps: ['jquery', 'popper']  // load both BEFORE bootstrap
+    }
+}</pre>
+                    <p class="mt-2 font-semibold text-red-700">
+                        🎯 EXAM: shim ensures ALL dependencies are loaded and executed BEFORE the module loads.<br>
+                        Order: deps[0] → deps[1] → deps[n] → then your module
+                    </p>
+                </div>
+                
+                <div class="bg-yellow-50 p-3 rounded text-xs mb-2">
+                    <strong>⚙️ How RequireJS config is built:</strong>
+                    <p class="mt-2 mb-2">Magento merges all requirejs-config.js files from modules and themes in this order:</p>
+                    <ol class="list-decimal list-inside space-y-1">
+                        <li>All module configs (app/code/*/view/frontend/requirejs-config.js)</li>
+                        <li>Parent theme configs (if theme inheritance)</li>
+                        <li>Current theme config (app/design/frontend/Vendor/theme/requirejs-config.js)</li>
+                    </ol>
+                    <p class="mt-2">Result: merged into pub/static/frontend/Vendor/theme/&lt;locale&gt;/requirejs-config.js</p>
+                    <p class="mt-1 text-gray-600">💡 Later configs override earlier ones (theme config wins over module config)</p>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs">
+                    <strong>Defining AMD modules with require():</strong>
+                    <pre class="mt-2">// web/js/my-module.js
+define([
+    'jquery',
+    'ko',
+    'uiComponent'
+], function($, ko, Component) {
+    'use strict';
+    
+    return Component.extend({
+        defaults: {
+            template: 'Vendor_Module/template'
+        },
+        
+        initialize: function() {
+            this._super();
+            console.log('Module loaded');
+            return this;
+        }
+    });
+});</pre>
+                    <p class="mt-2 text-gray-600">
+                        ✓ Dependencies are listed in array<br>
+                        ✓ Matching function parameters receive dependency instances<br>
+                        ✓ Return what you want to export
+                    </p>
+                </div>
             </div>
 
             <div class="border-l-4 border-green-500 pl-4">
@@ -149,6 +237,73 @@ define([
 }
 &lt;/script&gt;</pre>
                 </div>
+                
+                <div class="bg-purple-50 p-3 rounded text-xs mb-2">
+                    <strong>🎯 How jQuery widgets target elements:</strong>
+                    <p class="mt-2 mb-2">jQuery widgets use CSS selectors to bind widget functionality to DOM elements.</p>
+                    
+                    <p class="font-semibold mt-3 mb-1">Method 1: x-magento-init with selector</p>
+                    <pre class="mb-2">&lt;nav id="main-menu" class="navigation"&gt;
+    &lt;ul&gt;
+        &lt;li&gt;Home&lt;/li&gt;
+        &lt;li&gt;Products&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/nav&gt;
+
+&lt;script type="text/x-magento-init"&gt;
+{
+    "#main-menu": {
+        "menu": {
+            "responsive": true,
+            "expanded": true
+        }
+    }
+}
+&lt;/script&gt;</pre>
+                    <p class="text-gray-600 mb-2">
+                        ✓ Selector <code class="bg-gray-100 px-1">"#main-menu"</code> finds element by ID<br>
+                        ✓ Widget <code class="bg-gray-100 px-1">"menu"</code> is attached to that element<br>
+                        ✓ Inside widget, <code class="bg-gray-100 px-1">this.element</code> = the #main-menu element
+                    </p>
+                    
+                    <p class="font-semibold mt-3 mb-1">Method 2: data-mage-init attribute</p>
+                    <pre class="mb-2">&lt;nav id="main-menu" 
+     data-mage-init='{"menu": {"responsive": true}}'&gt;
+    &lt;ul&gt;&lt;li&gt;Home&lt;/li&gt;&lt;/ul&gt;
+&lt;/nav&gt;</pre>
+                    <p class="text-gray-600 mb-2">
+                        ✓ Widget attached directly to element with attribute<br>
+                        ✓ No script tag needed<br>
+                        ✓ <code class="bg-gray-100 px-1">this.element</code> = the nav element
+                    </p>
+                    
+                    <p class="font-semibold mt-3 mb-1">Method 3: Wildcard selector (*) - all elements</p>
+                    <pre class="mb-2">&lt;script type="text/x-magento-init"&gt;
+{
+    "*": {
+        "Magento_Ui/js/core/app": { /* ... */ }
+    }
+}
+&lt;/script&gt;</pre>
+                    <p class="text-gray-600 mb-2">
+                        ✓ Applies to entire page (no specific element)<br>
+                        ✓ Used for global components
+                    </p>
+                    
+                    <p class="font-semibold mt-3 mb-1">Inside the widget, access the element:</p>
+                    <pre>_create: function() {
+    // this.element is the jQuery object of targeted element
+    this.element.addClass('widget-active');
+    this.element.find('li').on('click', function() {
+        // handle menu item clicks
+    });
+}</pre>
+                    
+                    <p class="mt-2 font-semibold text-purple-700">
+                        🎯 EXAM: The selector in x-magento-init determines which element becomes <code class="bg-gray-100 px-1">this.element</code> inside the widget.<br>
+                        All widget methods operate on <code class="bg-gray-100 px-1">this.element</code>
+                    </p>
+                </div>
             </div>
 
             <div class="border-l-4 border-orange-500 pl-4">
@@ -182,6 +337,7 @@ uiCollection (forms, grids)</pre>
 
             <div class="border-l-4 border-red-500 pl-4">
                 <h3 class="font-semibold text-gray-800 text-lg mb-2">Mixins & Extensions</h3>
+                <p class="text-gray-700 text-sm mb-3">Mixins allow extending/modifying existing JS modules without overriding the entire file.</p>
                 
                 <div class="bg-gray-50 p-3 rounded text-xs mb-2">
                     <strong>Define mixin in requirejs-config.js:</strong>
@@ -196,20 +352,102 @@ uiCollection (forms, grids)</pre>
 };</pre>
                 </div>
                 
-                <div class="bg-gray-50 p-3 rounded text-xs mb-2">
-                    <strong>Mixin implementation:</strong>
-                    <pre class="mt-2">define([], function() {
+                <div class="bg-gray-50 p-3 rounded text-xs mb-3">
+                    <strong>Mixin implementation with this._super():</strong>
+                    <pre class="mt-2">// Vendor_Module/view/frontend/web/js/view/summary/mixin.js
+define([], function() {
     'use strict';
     
     return function(targetModule) {
         return targetModule.extend({
-            // override or extend methods
+            
+            // Override method and call parent with _super()
             getValue: function() {
-                return this._super() * 1.1; // add 10%
+                var originalValue = this._super(); // call original method
+                return originalValue * 1.1; // modify result
+            },
+            
+            // Add completely new method
+            getCustomValue: function() {
+                return this.getValue() + 10;
             }
         });
     };
 });</pre>
+                    <p class="mt-2 text-gray-600">
+                        ✓ <code class="bg-gray-100 px-1">this._super()</code> calls the original method<br>
+                        ✓ You can add new methods without breaking original<br>
+                        ✓ Multiple mixins can be applied to same module (chained)
+                    </p>
+                </div>
+                
+                <div class="bg-red-50 p-3 rounded text-xs mb-3">
+                    <strong>❌ How to disable a mixin:</strong>
+                    <pre class="mt-2">// In your theme's requirejs-config.js
+var config = {
+    config: {
+        mixins: {
+            'Magento_Checkout/js/view/summary/abstract-total': {
+                'OtherVendor_Module/js/view/summary/mixin': false  // disable it
+            }
+        }
+    }
+};</pre>
+                    <p class="mt-2 text-gray-600">
+                        Set mixin to <code class="bg-gray-100 px-1">false</code> to disable. Useful when vendor module breaks your site.
+                    </p>
+                </div>
+                
+                <div class="bg-purple-50 p-3 rounded text-xs mb-3">
+                    <strong>Alternative: Update function WITHOUT mixin (using map):</strong>
+                    <pre class="mt-2">// In requirejs-config.js - replace entire module
+var config = {
+    map: {
+        '*': {
+            'Magento_Checkout/js/view/summary/abstract-total': 
+                'Vendor_Module/js/view/summary/custom-total'
+        }
+    }
+};</pre>
+                    <pre class="mt-2">// Vendor_Module/view/frontend/web/js/view/summary/custom-total.js
+define([
+    'Magento_Checkout/js/view/summary/abstract-total'
+], function(Component) {
+    'use strict';
+    
+    return Component.extend({
+        getValue: function() {
+            // completely replace function, no _super() needed
+            return 100;
+        }
+    });
+});</pre>
+                    <p class="mt-2 text-gray-600">
+                        ⚠️ <strong>map</strong> replaces entire module path, loading YOUR version instead<br>
+                        ⚠️ You import original and extend it, but YOU control everything<br>
+                        ⚠️ Less flexible than mixin (can't stack multiple replacements)
+                    </p>
+                </div>
+                
+                <div class="bg-blue-50 p-3 rounded text-xs">
+                    <strong>Mixin vs Map - When to use what:</strong>
+                    <table class="w-full mt-2 text-xs">
+                        <tr class="border-b">
+                            <td class="p-2 font-semibold">Method</td>
+                            <td class="p-2 font-semibold">Use When</td>
+                            <td class="p-2 font-semibold">Advantage</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="p-2">Mixin</td>
+                            <td class="p-2">Small changes to 1-2 methods</td>
+                            <td class="p-2">Multiple mixins stack, upgradeable</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2">Map</td>
+                            <td class="p-2">Replacing entire module behavior</td>
+                            <td class="p-2">Full control, cleaner code</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
 
