@@ -284,27 +284,121 @@ full_page       - Full Page Cache (FPC)</pre>
                 </div>
                 
                 <div class="bg-gray-50 p-3 rounded text-xs mb-2">
-                    <strong>Full Page Cache (FPC):</strong>
-                    <pre class="mt-2">// Mark block as cacheable
+                    <strong>Enable caching for block:</strong>
+                    <pre class="mt-2">// Mark block as cacheable (public)
 protected $_isScopePrivate = false;
 
-// Cache tags
+// Cache lifetime in seconds (null = no cache)
+protected $_cacheLifetime = 3600; // 1 hour
+
+// Cache tags - used for selective purging
 public function getIdentities() {
-    return ['custom_cache_tag'];
+    return [
+        \Magento\Catalog\Model\Product::CACHE_TAG . '_' . $productId,
+        'custom_cache_tag'
+    ];
 }
 
-// Cache key info
+// Cache key - makes cache unique
 public function getCacheKeyInfo() {
-    return ['CUSTOM_CACHE', $this->getData('id')];
+    return [
+        'CUSTOM_CACHE',
+        $this->_storeManager->getStore()->getId(),
+        $this->getData('product_id')
+    ];
 }</pre>
                 </div>
                 
+                <div class="bg-red-50 p-3 rounded text-xs mb-3">
+                    <strong>🚫 Disable caching for block (remove cache):</strong>
+                    <pre class="mt-2">namespace Vendor\Module\Block;
+
+use Magento\Framework\View\Element\Template;
+
+class CustomBlock extends Template
+{
+    // Method 1: Set cache lifetime to null
+    protected $_cacheLifetime = null;
+    
+    // Method 2: Mark as private (not cached in FPC)
+    protected $_isScopePrivate = true;
+}
+
+// Or in layout XML - disable caching
+&lt;block class="Vendor\Module\Block\CustomBlock" name="custom.block" 
+       cacheable="false"&gt;
+&lt;/block&gt;</pre>
+                    <p class="mt-2 text-gray-600">
+                        ⚠️ <code class="bg-gray-100 px-1">$_cacheLifetime = null</code> - block NOT cached<br>
+                        ⚠️ <code class="bg-gray-100 px-1">$_isScopePrivate = true</code> - excluded from FPC<br>
+                        ⚠️ <code class="bg-gray-100 px-1">cacheable="false"</code> in XML - disable via layout
+                    </p>
+                </div>
+                
+                <div class="bg-yellow-50 p-3 rounded text-xs mb-3">
+                    <strong>⚙️ When to disable block caching:</strong>
+                    <ul class="list-disc list-inside mt-2 space-y-1">
+                        <li>Customer-specific data (name, cart count, wishlist)</li>
+                        <li>Real-time data (stock, prices with customer group)</li>
+                        <li>CSRF tokens, form keys</li>
+                        <li>Session-dependent content</li>
+                        <li>Time-sensitive data (countdown timers)</li>
+                    </ul>
+                    <p class="mt-2 font-semibold text-yellow-800">
+                        🎯 EXAM: Set $_cacheLifetime = null to completely disable caching for a block
+                    </p>
+                </div>
+                
                 <div class="bg-gray-50 p-3 rounded text-xs mb-2">
-                    <strong>Private content (customer-specific):</strong>
-                    <pre class="mt-2">// Use customer sections for dynamic data
+                    <strong>Private content (customer-specific data via JS):</strong>
+                    <pre class="mt-2">// Use customer sections for dynamic data (keeps page cacheable)
 &lt;div data-bind="scope: 'customer'"&gt;
     &lt;span data-bind="text: customer().fullname"&gt;&lt;/span&gt;
-&lt;/div&gt;</pre>
+&lt;/div&gt;
+
+// Customer section data loaded via AJAX
+// Page remains cached, customer data injected client-side</pre>
+                    <p class="mt-2 text-gray-600">
+                        ✓ Page cached, customer data loaded separately via JS<br>
+                        ✓ Best practice for customer-specific content<br>
+                        ✓ Example: cart count, customer name in header
+                    </p>
+                </div>
+                
+                <div class="bg-blue-50 p-3 rounded text-xs">
+                    <strong>🎯 Block cache quick reference:</strong>
+                    <table class="w-full mt-2 text-xs border-collapse">
+                        <tr class="border-b">
+                            <td class="p-2 font-semibold">Property/Method</td>
+                            <td class="p-2 font-semibold">Value</td>
+                            <td class="p-2 font-semibold">Effect</td>
+                        </tr>
+                        <tr class="border-b bg-white">
+                            <td class="p-2">$_cacheLifetime</td>
+                            <td class="p-2">3600</td>
+                            <td class="p-2">Cache for 1 hour</td>
+                        </tr>
+                        <tr class="border-b bg-white">
+                            <td class="p-2">$_cacheLifetime</td>
+                            <td class="p-2">null</td>
+                            <td class="p-2">NO caching (disabled)</td>
+                        </tr>
+                        <tr class="border-b bg-white">
+                            <td class="p-2">$_isScopePrivate</td>
+                            <td class="p-2">true</td>
+                            <td class="p-2">Excluded from FPC</td>
+                        </tr>
+                        <tr class="border-b bg-white">
+                            <td class="p-2">$_isScopePrivate</td>
+                            <td class="p-2">false</td>
+                            <td class="p-2">Included in FPC (default)</td>
+                        </tr>
+                        <tr class="bg-white">
+                            <td class="p-2">cacheable (XML)</td>
+                            <td class="p-2">false</td>
+                            <td class="p-2">Disable via layout</td>
+                        </tr>
+                    </table>
                 </div>
                 
                 <p class="text-sm text-gray-700 mt-2">Link: <a href="https://developer.adobe.com/commerce/php/development/" class="text-blue-600 hover:underline">Partial caching & Full page caching</a></p>
