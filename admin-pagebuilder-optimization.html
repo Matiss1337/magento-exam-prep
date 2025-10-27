@@ -89,6 +89,153 @@
                 </ul>
             </div>
 
+            <div class="border-l-4 border-yellow-500 pl-4">
+                <h3 class="font-semibold text-gray-800 text-lg mb-2">Email Templates & Translations</h3>
+                <p class="text-gray-700 text-sm mb-3">Email templates use simple directive syntax. Admin configuration for translations and email customization.</p>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-3">
+                    <strong>Email template location:</strong>
+                    <pre class="mt-2">&lt;module_dir&gt;/view/frontend/email/
+&lt;module_dir&gt;/view/adminhtml/email/
+
+Example: view/frontend/email/custom_email.html</pre>
+                </div>
+                
+                <div class="bg-yellow-50 p-3 rounded text-xs mb-3">
+                    <strong>🎯 If statements in email templates:</strong>
+                    <p class="mt-2 mb-2">Email templates use ONLY <code class="bg-gray-100 px-1">{{if}}</code> and <code class="bg-gray-100 px-1">{{/if}}</code> directives (no else, elseif)</p>
+                    <pre class="mb-2">&lt;!-- Basic if statement --&gt;
+{{if customer_name}}
+    &lt;p&gt;Hello {{var customer_name}}&lt;/p&gt;
+{{/if}}
+
+&lt;!-- Check if variable exists --&gt;
+{{if order.increment_id}}
+    &lt;p&gt;Order #{{var order.increment_id}}&lt;/p&gt;
+{{/if}}
+
+&lt;!-- For else logic, use two separate if blocks --&gt;
+{{if is_guest}}
+    &lt;p&gt;Welcome Guest!&lt;/p&gt;
+{{/if}}
+{{if not_guest}}
+    &lt;p&gt;Welcome back, {{var customer_name}}!&lt;/p&gt;
+{{/if}}</pre>
+                    <p class="mt-2 font-semibold text-yellow-800">
+                        🎯 EXAM: Email templates support ONLY {{if}} and {{/if}}<br>
+                        No {{else}}, no {{elseif}} - use separate {{if}} blocks for alternative logic
+                    </p>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded text-xs mb-3">
+                    <strong>Common email directives:</strong>
+                    <pre class="mt-2">{{var variable_name}}           - Output variable
+{{if condition}}{{/if}}          - Conditional
+{{trans "Text"}}                 - Translate text
+{{store url=""}}                 - Store URL
+{{block class="..." area="..."}} - Insert block
+{{inlinecss file="..."}}         - Inline CSS
+
+Example:
+{{var order.customer_firstname}}
+{{trans "Thank you for your order"}}
+{{store url="customer/account"}}</pre>
+                </div>
+                
+                <div class="bg-blue-50 p-3 rounded text-xs mb-3">
+                    <strong>📧 Update email footer from Admin:</strong>
+                    <pre class="mt-2">Admin Path:
+Stores → Configuration → General → Store Email Addresses
+
+Configure:
+- General Contact email/name
+- Sales Representative email/name  
+- Customer Support email/name
+- Custom Email 1 & 2
+
+Then:
+Stores → Configuration → Sales → Sales Emails
+Stores → Configuration → Sales → Invoice Emails
+etc.
+
+Footer template:
+Content → Design → Configuration → Transactional Emails → Footer Template</pre>
+                    <p class="mt-2 text-gray-600">
+                        ✓ Default footer: Magento_Email::email/footer.html<br>
+                        ✓ Can customize per store view<br>
+                        ✓ Supports HTML and directives
+                    </p>
+                </div>
+                
+                <div class="bg-purple-50 p-3 rounded text-xs mb-3">
+                    <strong>🖼️ Email images from Admin:</strong>
+                    <pre class="mt-2">Method 1 - Logo in email header:
+Content → Design → Configuration → [Edit Store View]
+→ Transactional Emails → Logo Image
+Upload logo (appears in email header)
+
+Method 2 - Custom images in templates:
+Use {{media}} directive:
+&lt;img src="{{media url="email/custom-image.jpg"}}" alt="Image" /&gt;
+
+Upload image to: pub/media/email/
+
+Method 3 - Store logo URL:
+{{var logo_url}}
+{{var logo_alt}}
+&lt;img src="{{var logo_url}}" alt="{{var logo_alt}}" /&gt;</pre>
+                    <p class="mt-2 text-gray-600">
+                        ✓ Logo from: Content → Design → Configuration<br>
+                        ✓ Images from: pub/media/ using {{media}} directive<br>
+                        ✓ Use absolute URLs for external images
+                    </p>
+                </div>
+                
+                <div class="bg-green-50 p-3 rounded text-xs mb-3">
+                    <strong>🌐 Add translations to storefront from Admin:</strong>
+                    <pre class="mt-2">Admin Path:
+Stores → Configuration → General → Locale Options
+→ Select Locale (e.g., de_DE, fr_FR, es_ES)
+
+Inline Translation Tool:
+Stores → Configuration → Advanced → Developer
+→ Translate Inline → Enabled for Frontend
+
+Then on frontend:
+- Enable translate mode (book icon appears)
+- Click any text to edit translation
+- Submit translation
+
+Translation files location:
+app/i18n/&lt;vendor&gt;/&lt;package&gt;/&lt;locale&gt;.csv
+Example: app/i18n/Magento/de_DE/de_DE.csv
+
+CSV format:
+"Original Text","Translated Text"
+"Add to Cart","In den Warenkorb"
+"Checkout","Kasse"</pre>
+                    <p class="mt-2 text-gray-600">
+                        ✓ Set locale per store view<br>
+                        ✓ Inline translation for quick edits<br>
+                        ✓ Custom translations via CSV in app/i18n/<br>
+                        ✓ Module translations in i18n/&lt;locale&gt;.csv
+                    </p>
+                </div>
+                
+                <div class="bg-red-50 p-3 rounded text-xs">
+                    <strong class="text-red-800">🎯 EXAM KEY POINTS:</strong>
+                    <ul class="list-disc list-inside mt-2 space-y-1">
+                        <li>Email templates: ONLY {{if}} and {{/if}} (no else)</li>
+                        <li>Email footer: Content → Design → Configuration → Transactional Emails</li>
+                        <li>Email logo: Same location, Logo Image upload</li>
+                        <li>Email images: {{media url="path"}} for pub/media files</li>
+                        <li>Translations: Stores → Configuration → Locale Options</li>
+                        <li>Inline translate: Developer settings, book icon on frontend</li>
+                        <li>Custom translations: app/i18n/Vendor/Package/locale.csv</li>
+                    </ul>
+                </div>
+            </div>
+
             <div class="border-l-4 border-purple-500 pl-4">
                 <h3 class="font-semibold text-gray-800 text-lg mb-2">Performance Optimization</h3>
                 
